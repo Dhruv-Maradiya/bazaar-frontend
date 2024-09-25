@@ -9,9 +9,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/server": "^11.11.0",
+    "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^6.1.1",
+    "@mui/material": "^6.1.1",
+    "@mui/system": "^6.1.1",
+    "@toolpad/core": "^0.7.0",
+    "next": "14.2.13",
+    "nprogress": "^0.2.0",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.2.13"
+    "react-hot-toast": "^2.4.1"
+  },
+  "yarn": {
+    "overrides": {
+      "@mui/styled-engine": "5.11.0"
+    }
   },
   "devDependencies": {
     "eslint": "^8",
