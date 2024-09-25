@@ -29,10 +29,7 @@ const FallbackSpinner = ({ sx }) => {
         ...sx,
       }}
     >
-      <LogoIllustration
-        alt="login-illustration"
-        src={`/images/pages/logo.png`}
-      />
+      <LogoIllustration alt="login-illustration" src={`/images/logo.png`} />
       <CircularProgress disableShrink sx={{ mt: 6 }} />
     </Box>
   );

@@ -3,23 +3,28 @@
 // ** Next Imports
 import Head from "next/head";
 import { Router } from "next/router";
+// ** Store Imports
+import { store } from '@/store';
+import { Provider } from 'react-redux';
 // ** Emotion Imports
 import { CacheProvider } from "@emotion/react";
 // ** Third Party Import
 import { Toaster } from "react-hot-toast";
 // ** Spinner Import
-import Spinner from "@/@core/components/spinner";
 // ** Styled Components
 import ReactHotToast from "@/@core/components/react-hot-toast";
 // ** Loader Import
 import NProgress from "nprogress";
 // ** Config Imports
+import CustomAppProvider from "@/@core/components/AppProviderCustom";
+import AuthGuard from "@/@core/components/guards/AuthGuard";
+import GuestGuard from "@/@core/components/guards/GuestGuard";
+import FallbackSpinner from "@/@core/components/spinner";
+import WindowWrapper from "@/@core/components/window-wrapper";
 import themeConfig from "@/configs/themeConfig";
+import { AuthProvider } from "@/context/AuthContext";
 import { SettingsConsumer, SettingsProvider } from "@/context/settingContext";
 import UserLayout from "@/layouts/UserLayout";
-import WindowWrapper from "@/@core/components/window-wrapper";
-import { AppProvider } from "@toolpad/core";
-import NAVIGATION from "@/navigation/navigation";
 import { createEmotionCache } from "@/utils/emotion-cache";
 
 const clientSideEmotionCache = createEmotionCache();
@@ -48,10 +53,11 @@ if (themeConfig.routingLoader) {
 export default function App(props) {
   const { Component, pageProps, emotionCache = clientSideEmotionCache } = props;
   const getLayout =
-    Component.Layout ?? ((page) => <UserLayout>{page}</UserLayout>);
+    Component.getLayout ?? ((page) => <UserLayout>{page}</UserLayout>);
+  const Guard = Component.guestGuard === true ? GuestGuard : AuthGuard;
 
   return (
-    <>
+    <Provider store={store}>
       <Head>
         <title>{`${themeConfig.appName}`}</title>
         <meta name="description" content={`${themeConfig.appName}`} />
@@ -64,29 +70,28 @@ export default function App(props) {
           <SettingsConsumer>
             {({ settings }) => {
               return (
-                <AppProvider
-                  navigation={NAVIGATION}
-                  branding={{
-                    title: settings.appName,
-                  }}
-                >
-                  <WindowWrapper>
-                    {getLayout(<Component {...pageProps} />)}
-                    <ReactHotToast>
-                      <Toaster
-                        position={settings.toastPosition}
-                        gutter={8}
-                        containerStyle={{ zIndex: 9999 }}
-                        toastOptions={{ duration: 3000 }}
-                      />
-                    </ReactHotToast>
-                  </WindowWrapper>
-                </AppProvider>
+                <AuthProvider>
+                  <Guard fallback={<FallbackSpinner />}>
+                    <CustomAppProvider settings={settings}>
+                      <WindowWrapper>
+                        {getLayout(<Component {...pageProps} />)}
+                        <ReactHotToast>
+                          <Toaster
+                            position={settings.toastPosition}
+                            gutter={8}
+                            containerStyle={{ zIndex: 9999 }}
+                            toastOptions={{ duration: 3000 }}
+                          />
+                        </ReactHotToast>
+                      </WindowWrapper>
+                    </CustomAppProvider>
+                  </Guard>
+                </AuthProvider>
               );
             }}
           </SettingsConsumer>
         </SettingsProvider>
       </CacheProvider>
-    </>
+    </Provider>
   );
 }
