@@ -9,7 +9,6 @@ name: Linting and Formatting
 
 # this is trigger CI on all kinds of branches and PRs
 on:
-  push:
   pull_request:
 
 jobs:
