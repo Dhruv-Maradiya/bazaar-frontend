@@ -8,7 +8,7 @@ const GuestGuard = (props) => {
 
   const { loading, user } = useAuth();
 
-  if (user && !loading) {
+  if (!user.isEmpty && !loading) {
     router.replace("/");
   }
 

@@ -1,25 +1,25 @@
 // ** Toolkit imports
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 
-// ** Reducers
-import settings, { resetStore, initialState } from "@/store/settings/user";
+// ** Firebase imports
+import { app as firebaseApp } from "@/lib/firebase/init";
+import { createFirestoreInstance, firestoreReducer } from "redux-firestore";
 
-const reducers = {
-  settings: settings,
+// ** Reducers
+import settings from "@/store/settings/user";
+import { firebaseReducer } from "react-redux-firebase";
+
+const rrfConfig = {
+  useFirestoreForProfile: true,
 };
 
 const combinedReducer = combineReducers({
-  ...reducers,
+  settings: settings,
+  firebase: firebaseReducer,
+  firestore: firestoreReducer,
 });
 
 const rootReducer = (state, action) => {
-  if (action.type === resetStore.type) {
-    state = {
-      ...reducers,
-      settings: initialState(),
-    };
-  }
-
   return combinedReducer(state, action);
 };
 
@@ -30,3 +30,10 @@ export const store = configureStore({
       serializableCheck: false,
     }),
 });
+
+export const rrfProps = {
+  firebase: firebaseApp,
+  config: rrfConfig,
+  dispatch: store.dispatch,
+  createFirestoreInstance: createFirestoreInstance,
+};

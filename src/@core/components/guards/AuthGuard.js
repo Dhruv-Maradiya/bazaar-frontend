@@ -16,12 +16,12 @@ const AuthGuard = (props) => {
       return;
     }
 
-    if (!auth.user && auth.loading === false) {
+    if (auth.user.isEmpty && auth.loading === false) {
       router.push("/auth/login");
     }
   }, [auth.loading, auth.user, router]);
 
-  if (auth.loading || !auth.user) {
+  if (auth.loading) {
     return fallback;
   }
 

@@ -4,8 +4,8 @@
 import Head from "next/head";
 import { Router } from "next/router";
 // ** Store Imports
-import { store } from '@/store';
-import { Provider } from 'react-redux';
+import { rrfProps, store } from "@/store";
+import { Provider } from "react-redux";
 // ** Emotion Imports
 import { CacheProvider } from "@emotion/react";
 // ** Third Party Import
@@ -26,6 +26,8 @@ import { AuthProvider } from "@/context/AuthContext";
 import { SettingsConsumer, SettingsProvider } from "@/context/settingContext";
 import UserLayout from "@/layouts/UserLayout";
 import { createEmotionCache } from "@/utils/emotion-cache";
+import { ReactReduxFirebaseProvider } from "react-redux-firebase";
+import dynamic from "next/dynamic";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -50,7 +52,7 @@ if (themeConfig.routingLoader) {
   });
 }
 
-export default function App(props) {
+function App(props) {
   const { Component, pageProps, emotionCache = clientSideEmotionCache } = props;
   const getLayout =
     Component.getLayout ?? ((page) => <UserLayout>{page}</UserLayout>);
@@ -64,34 +66,39 @@ export default function App(props) {
         <meta name="keywords" content={`${themeConfig.appName}`} />
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-
-      <CacheProvider value={emotionCache}>
-        <SettingsProvider>
-          <SettingsConsumer>
-            {({ settings }) => {
-              return (
-                <AuthProvider>
-                  <Guard fallback={<FallbackSpinner />}>
-                    <CustomAppProvider settings={settings}>
-                      <WindowWrapper>
-                        {getLayout(<Component {...pageProps} />)}
-                        <ReactHotToast>
-                          <Toaster
-                            position={settings.toastPosition}
-                            gutter={8}
-                            containerStyle={{ zIndex: 9999 }}
-                            toastOptions={{ duration: 3000 }}
-                          />
-                        </ReactHotToast>
-                      </WindowWrapper>
-                    </CustomAppProvider>
-                  </Guard>
-                </AuthProvider>
-              );
-            }}
-          </SettingsConsumer>
-        </SettingsProvider>
-      </CacheProvider>
+      <ReactReduxFirebaseProvider {...rrfProps}>
+        <CacheProvider value={emotionCache}>
+          <SettingsProvider>
+            <SettingsConsumer>
+              {({ settings }) => {
+                return (
+                  <AuthProvider>
+                    <Guard fallback={<FallbackSpinner />}>
+                      <CustomAppProvider settings={settings}>
+                        <WindowWrapper>
+                          {getLayout(<Component {...pageProps} />)}
+                          <ReactHotToast>
+                            <Toaster
+                              position={settings.toastPosition}
+                              gutter={8}
+                              containerStyle={{ zIndex: 9999 }}
+                              toastOptions={{ duration: 3000 }}
+                            />
+                          </ReactHotToast>
+                        </WindowWrapper>
+                      </CustomAppProvider>
+                    </Guard>
+                  </AuthProvider>
+                );
+              }}
+            </SettingsConsumer>
+          </SettingsProvider>
+        </CacheProvider>
+      </ReactReduxFirebaseProvider>
     </Provider>
   );
 }
+
+export default dynamic(() => Promise.resolve(App), {
+  ssr: false,
+});

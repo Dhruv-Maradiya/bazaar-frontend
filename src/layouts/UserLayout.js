@@ -1,11 +1,7 @@
-import { DashboardLayout, PageContainer } from "@toolpad/core";
+import { DashboardLayout } from "@toolpad/core";
 
 const UserLayout = ({ children }) => {
-  return (
-    <DashboardLayout>
-      <PageContainer>{children}</PageContainer>
-    </DashboardLayout>
-  );
+  return <DashboardLayout>{children}</DashboardLayout>;
 };
 
 export default UserLayout;
