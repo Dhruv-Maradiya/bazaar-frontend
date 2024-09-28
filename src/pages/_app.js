@@ -28,8 +28,12 @@ import UserLayout from "@/layouts/UserLayout";
 import { createEmotionCache } from "@/utils/emotion-cache";
 import { ReactReduxFirebaseProvider } from "react-redux-firebase";
 import dynamic from "next/dynamic";
+import SearchBar from "@/components/SearchBar";
+import { Container } from "@mui/material";
 
 const clientSideEmotionCache = createEmotionCache();
+
+
 
 // ** Pace Loader
 if (themeConfig.routingLoader) {
@@ -58,6 +62,11 @@ function App(props) {
     Component.getLayout ?? ((page) => <UserLayout>{page}</UserLayout>);
   const Guard = Component.guestGuard === true ? GuestGuard : AuthGuard;
 
+  const handleSearch = (term) => {
+    console.log('Searching for:', term);
+    // Implement your search logic here
+  };
+
   return (
     <Provider store={store}>
       <Head>
@@ -76,6 +85,9 @@ function App(props) {
                     <Guard fallback={<FallbackSpinner />}>
                       <CustomAppProvider settings={settings}>
                         <WindowWrapper>
+                          <Container maxWidth="md" sx={{ padding: '80px 0px 100px 200px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <SearchBar onSearch={handleSearch} />
+                          </Container>
                           {getLayout(<Component {...pageProps} />)}
                           <ReactHotToast>
                             <Toaster
