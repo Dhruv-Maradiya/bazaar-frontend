@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'column',
         gap: '10px',
-        padding: '30px',
+        padding: '32px',
         width: '450px',
         borderRadius: '20px',
         fontFamily: '-apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Oxygen, Ubuntu, Cantarell, \'Open Sans\', \'Helvetica Neue\', sans-serif',
@@ -153,6 +153,6 @@ const SignIn = () => {
     );
 };
 
-SignIn.getLayout = (page) => <BlankLayout>{page}</BlankLayout>
-SignIn.guestGuard = true
+SignIn.getLayout = (page) => <BlankLayout>{page}</BlankLayout>;
+SignIn.guestGuard = true;
 export default SignIn;
