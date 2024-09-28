@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'column',
         gap: '10px',
-        padding: '32px',
+        padding: '30px',
         width: '450px',
         borderRadius: '20px',
         fontFamily: '-apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Oxygen, Ubuntu, Cantarell, \'Open Sans\', \'Helvetica Neue\', sans-serif',
@@ -102,7 +102,7 @@ const SignIn = () => {
             <CssBaseline />
             <Container component="main" maxWidth="xs" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
                 <Paper elevation={3} style={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', backgroundColor: theme.palette.background.paper }}>
-                    <Image
+                    <Image 
                         src={BullLogo}
                         width={100}
                         height={100}
@@ -153,6 +153,6 @@ const SignIn = () => {
     );
 };
 
-SignIn.getLayout = (page) => <BlankLayout>{page}</BlankLayout>;
+SignIn.getLayout = (page) => <BlankLayout>{page}</BlankLayout>
 SignIn.guestGuard = true;
 export default SignIn;
