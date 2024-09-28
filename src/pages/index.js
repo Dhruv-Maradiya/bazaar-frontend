@@ -1,3 +1,4 @@
+import SearchBar from "@/components/SearchBar";
 import {
   Paper,
   Table,
@@ -22,7 +23,11 @@ const StockList = ({ stocks: _stocks }) => {
   console.log(_stocks);
 
   return (
+
     <PageContainer breadCrumbs={[]}>
+      <SearchBar>
+          
+      </SearchBar>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
