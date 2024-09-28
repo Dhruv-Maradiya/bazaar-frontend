@@ -152,7 +152,6 @@ const SignIn = () => {
         </ThemeProvider>
     );
 };
-// signin page code 
 
 SignIn.getLayout = (page) => <BlankLayout>{page}</BlankLayout>;
 SignIn.guestGuard = true;
