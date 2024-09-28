@@ -21,7 +21,7 @@
     "@reduxjs/toolkit": "^2.2.7",
     "@toolpad/core": "^0.7.0",
     "firebase": "^10.13.2",
-    "firebase-tools": "^1.2.0",
+    "firebase-tools": "^13.20.1",
     "next": "14.2.13",
     "nprogress": "^0.2.0",
     "react": "^18",

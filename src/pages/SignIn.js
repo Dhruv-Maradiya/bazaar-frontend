@@ -102,7 +102,7 @@ const SignIn = () => {
             <CssBaseline />
             <Container component="main" maxWidth="xs" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
                 <Paper elevation={3} style={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', backgroundColor: theme.palette.background.paper }}>
-                    <Image 
+                    <Image
                         src={BullLogo}
                         width={100}
                         height={100}
@@ -152,6 +152,7 @@ const SignIn = () => {
         </ThemeProvider>
     );
 };
+// signin page code 
 
 SignIn.getLayout = (page) => <BlankLayout>{page}</BlankLayout>;
 SignIn.guestGuard = true;
