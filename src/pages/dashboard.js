@@ -1,5 +1,6 @@
+import SearchBar from "@/components/SearchBar";
 const Dashboard = () => {
-  return <div>DASHBOARD</div>;
+  return <div>SearchBar</div>;
 };
 
 export default Dashboard;
