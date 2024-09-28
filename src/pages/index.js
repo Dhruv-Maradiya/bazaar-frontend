@@ -25,9 +25,8 @@ const StockList = ({ stocks: _stocks }) => {
   return (
 
     <PageContainer breadCrumbs={[]}>
-      <SearchBar>
-          
-      </SearchBar>
+      <SearchBar/>
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
