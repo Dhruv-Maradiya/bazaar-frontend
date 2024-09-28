@@ -12,6 +12,7 @@ import { PageContainer } from "@toolpad/core";
 import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
 
+
 const stocks = [
   { name: "Apple", symbol: "AAPL", price: 150 },
   { name: "Google", symbol: "GOOGL", price: 2800 },
@@ -53,3 +54,5 @@ export default compose(
     stocks: state.firestore.ordered.stocks,
   }))
 )(StockList);
+
+// Bazaar Bulls and bear
