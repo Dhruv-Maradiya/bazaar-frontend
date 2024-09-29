@@ -8,16 +8,14 @@ import {
   TableCell,
   TableContainer,
   TableRow,
-  IconButton,
   Typography,
-  Box,
   useMediaQuery,
 } from "@mui/material";
 import { green, red } from "@mui/material/colors";
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import StockUpArrow from "./StockUpArrow";
+import { useTheme } from "@mui/material/styles";
 import StockDownArrow from "./StockDownArrow";
-import { useTheme } from '@mui/material/styles';
+import StockUpArrow from "./StockUpArrow";
+import PortfolioCard from "./PortfolioCard";
 
 const initialStocks = [
   { name: "Apple", symbol: "https://s3-symbol-logo.tradingview.com/apple--600.png", price: 150, change: -1.25, percentage: -0.83, positive: false },
