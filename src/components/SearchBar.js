@@ -39,13 +39,13 @@ const SearchBar = ({ onSearch }) => {
             '& .MuiOutlinedInput-root': {
               borderRadius: '2rem', // Rounded corners using rem
               '& fieldset': {
-                borderColor: 'rgba(255, 255, 255, 0.5)', // Softer border color for dark mode
+                borderColor: 'rgba(0, 0, 255, 0.7)', // Matching blue color (same as PortfolioCard button)
               },
               '&:hover fieldset': {
-                borderColor: 'rgba(0, 0, 255, 0.7)', // Lighter blue for hover
+                borderColor: 'rgba(0, 0, 255, 0.85)', // Slightly lighter blue on hover
               },
               '&.Mui-focused fieldset': {
-                borderColor: 'rgba(0, 0, 255, 0.7)', // Lighter blue when focused
+                borderColor: 'rgba(0, 0, 255, 1)', // Stronger blue when focused
               },
             },
             '& input': {
