@@ -2,6 +2,7 @@ import { useAuth } from "@/hooks/useAuth";
 import NAVIGATION from "@/navigation/navigation";
 import { AppProvider } from "@toolpad/core/nextjs";
 import { useRouter } from "next/router";
+import customTheme from "@/configs/theme/theme";
 
 const CustomAppProvider = ({ children, settings }) => {
   const router = useRouter();
@@ -30,6 +31,7 @@ const CustomAppProvider = ({ children, settings }) => {
           image: user?.photoURL,
         },
       }}
+      theme={customTheme}
     >
       {children}
     </AppProvider>
