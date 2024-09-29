@@ -1,6 +1,13 @@
-import SearchBar from "@/components/SearchBar";
+import StockList from "@/components/ui/StockList";
+
 const Dashboard = () => {
-  return <div>SearchBar</div>;
+  return (
+    <>
+      <div>
+      <StockList />
+      </div>
+    </>
+  )
 };
 
 export default Dashboard;

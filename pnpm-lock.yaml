@@ -39,7 +39,7 @@ importers:
         specifier: ^10.13.2
         version: 10.13.2
       firebase-tools:
-        specifier: ^13.19.0
+        specifier: ^13.20.0
         version: 13.20.1(encoding@0.1.13)
       next:
         specifier: 14.2.13
