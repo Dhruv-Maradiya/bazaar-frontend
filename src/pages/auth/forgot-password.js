@@ -5,8 +5,6 @@ import {
     Container,
     CssBaseline,
     Paper,
-    ThemeProvider,
-    createTheme,
     TextField,
     Button,
     Typography
@@ -17,12 +15,6 @@ import { useRouter } from 'next/router';
 import { useAuth } from '@/hooks/useAuth';
 
 const ForgotPassword = () => {
-    const theme = createTheme({
-        palette: {
-            mode: 'light',
-        },
-    });
-
     const [email, setEmail] = useState('');
     const { login } = useAuth();
     const router = useRouter();
@@ -34,7 +26,7 @@ const ForgotPassword = () => {
     };
 
     return (
-        <ThemeProvider theme={theme}>
+        <>
             <CssBaseline />
             <Container
                 component="main"
@@ -107,7 +99,7 @@ const ForgotPassword = () => {
                     </Box>
                 </Paper>
             </Container>
-        </ThemeProvider>
+        </>
     );
 };
 
