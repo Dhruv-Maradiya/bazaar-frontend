@@ -8,20 +8,16 @@ import {
   TableCell,
   TableContainer,
   TableRow,
-  Typography
+  IconButton,
+  Typography,
+  Box,
+  useMediaQuery,
 } from "@mui/material";
 import { green, red } from "@mui/material/colors";
-import { useTheme } from '@mui/material/styles';
-import { compose } from "@reduxjs/toolkit";
-import { PageContainer } from "@toolpad/core";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { connect } from "react-redux";
-import { firestoreConnect } from "react-redux-firebase";
-import StockDownArrow from "./StockDownArrow";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import StockUpArrow from "./StockUpArrow";
-import WatchList from "./WatchList";
-import NewsSection from './NewsSection';
+import StockDownArrow from "./StockDownArrow";
+import { useTheme } from '@mui/material/styles';
 
 const initialStocks = [
   { name: "Apple", symbol: "https://s3-symbol-logo.tradingview.com/apple--600.png", price: 150, change: -1.25, percentage: -0.83, positive: false },
@@ -51,9 +47,11 @@ const updateStocks = (stocks) => {
   });
 };
 
-const StockList = ({ stocks: _stocks }) => {
+const StockList = () => {
   const theme = useTheme();
   const [stocks, setStocks] = useState(initialStocks);
+
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // For responsiveness
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -64,9 +62,15 @@ const StockList = ({ stocks: _stocks }) => {
   }, []);
 
   return (
-    <PageContainer breadCrumbs={[]}>
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', p: 2 }}>
-        <TableContainer component={Paper} sx={{ maxWidth: 900, marginBottom: '20px', borderRadius: 2 }}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
+      {/* Stock List */}
+      <Box
+        sx={{
+          flex: 3, // Stock list takes more space
+          marginRight: isMobile ? '0' : '1rem', // Add margin on larger screens
+        }}
+      >
+        <TableContainer component={Paper} sx={{ borderRadius: 2, maxWidth: '100%' }}>
           <Table>
             <TableBody>
               {stocks.map((stock) => (
@@ -80,15 +84,17 @@ const StockList = ({ stocks: _stocks }) => {
                   }}
                 >
                   <TableCell>
-                    <Image width={32} height={32} src={stock.symbol} alt={`${stock.name} logo`} />
-                  </TableCell>
-                  <TableCell>
                     <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
                       {stock.name}
                     </Typography>
                   </TableCell>
+                  <TableCell>
+                    <Typography variant="body2">{stock.symbol}</Typography>
+                  </TableCell>
                   <TableCell align="right">
-                    <Typography sx={{ fontWeight: 'bold', fontSize: '1.2rem' }} variant="body2">₹{stock.price.toFixed(2)}</Typography>
+                    <Typography sx={{ fontWeight: 'bold', fontSize: '1.2rem' }} variant="body2">
+                      ₹{stock.price.toFixed(2)}
+                    </Typography>
                   </TableCell>
                   <TableCell align="right">
                     <Typography
@@ -103,11 +109,7 @@ const StockList = ({ stocks: _stocks }) => {
                       variant="body2"
                       sx={{ color: stock.positive ? green[400] : red[400], fontWeight: 'bold', fontSize: '1.2rem' }}
                     >
-                      {stock.positive ? (<>
-                        <StockUpArrow />
-                      </>) : (<>
-                        <StockDownArrow />
-                      </>)} {Math.abs(stock.percentage).toFixed(2)}%
+                      {stock.positive ? <StockUpArrow /> : <StockDownArrow />} {Math.abs(stock.percentage).toFixed(2)}%
                     </Typography>
                   </TableCell>
                   <TableCell align="center">
@@ -129,18 +131,16 @@ const StockList = ({ stocks: _stocks }) => {
             </TableBody>
           </Table>
         </TableContainer>
-        <WatchList />
       </Box>
-      <Box sx={{ mt: 5 }}>
-        <NewsSection />
-      </Box>
-    </PageContainer>
+
+      {/* Portfolio Card */}
+      {!isMobile && (
+        <Box sx={{ flex: 1 }}>
+          <PortfolioCard />
+        </Box>
+      )}
+    </Box>
   );
 };
 
-export default compose(
-  firestoreConnect([{ collection: "stocks" }]),
-  connect((state, props) => ({
-    stocks: state.firestore.ordered.stocks,
-  }))
-)(StockList);
+export default StockList;
