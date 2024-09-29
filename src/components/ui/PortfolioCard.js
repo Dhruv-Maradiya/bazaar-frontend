@@ -6,40 +6,40 @@ import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 
 const PortfolioCard = () => {
-  const theme = useTheme(); // For adapting to light and dark mode
-
+  const theme = useTheme();
+  
   return (
     <Card 
       variant="outlined" 
       sx={{ 
-        maxWidth: '300px', // Smaller width for the card
-        padding: '1rem', // Reduce padding to match a more compact design
-        borderRadius: '1rem', // Rounded corners
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Softer shadow
-        bgcolor: 'background.paper', // Adapts to dark mode
+        maxWidth: '300px', 
+        padding: '1rem', 
+        borderRadius: '1rem', 
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', 
+        bgcolor: 'background.paper', 
         transition: '0.3s ease-in-out',
         '&:hover': {
-          boxShadow: '0 8px 12px rgba(0, 0, 0, 0.2)', // Slightly stronger shadow on hover
+          boxShadow: '0 8px 12px rgba(0, 0, 0, 0.2)', 
         }
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        {/* Icon */}
+        
         <Box 
           sx={{ 
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'center', 
-            width: '2.5rem', // Smaller icon container
+            width: '2.5rem', 
             height: '2.5rem', 
-            borderRadius: '0.5rem', // Rounded icon background
-            backgroundColor: theme.palette.mode === 'dark' ? '#004c8c' : '#e0f2fe', // Dark/light mode adaptive color
+            borderRadius: '0.5rem',
+            backgroundColor: theme.palette.mode === 'dark' ? '#004c8c' : '#e0f2fe', 
             marginRight: '1rem'
           }}
         >
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
-            width="16" // Smaller icon
+            width="16" 
             height="16" 
             fill="currentColor" 
             className="bi bi-bar-chart-fill" 
@@ -50,32 +50,31 @@ const PortfolioCard = () => {
         </Box>
         {/* Text */}
         <Typography 
-          variant="body2" // Slightly smaller text size
+          variant="body2" 
           component="div"
           sx={{ 
             fontWeight: 500, 
-            color: 'text.primary' // Adapts to dark mode
+            color: 'text.primary' 
           }}
         >
           Create a portfolio to view your investments in one place
         </Typography>
       </Box>
 
-      {/* Button */}
-      <Box sx={{ mt: 1.5 }}> {/* Reduced margin-top */}
+      <Box sx={{ mt: 1.5 }}> 
         <Button 
           variant="outlined" 
           color="primary" 
           fullWidth
           sx={{ 
             textTransform: 'none',
-            borderRadius: '2rem', // More rounded button
-            padding: '0.75rem 1rem', // Adjusted padding for smaller size
-            fontSize: '0.875rem', // Slightly smaller font size for button text
-            borderWidth: '1.5px', // Adjusted border size
-            backgroundColor: 'transparent', // Transparent background
+            borderRadius: '2rem', 
+            padding: '0.75rem 1rem', 
+            fontSize: '0.875rem', 
+            borderWidth: '1.5px', 
+            backgroundColor: 'transparent', 
             '&:hover': {
-              backgroundColor: 'rgba(0, 0, 255, 0.05)', // Subtle hover background
+              backgroundColor: 'rgba(0, 0, 255, 0.05)', 
               borderColor: 'primary.main',
             }
           }}
