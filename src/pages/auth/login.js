@@ -2,6 +2,7 @@ import { useAuth } from "@/hooks/useAuth";
 import BlankLayout from "@/layouts/BlankLayout";
 import { SignInPage } from "@toolpad/core/SignInPage";
 import { useRouter } from "next/router";
+import SignIn from "../SignIn";
 
 const Login = () => {
   const { login } = useAuth();
@@ -19,15 +20,16 @@ const Login = () => {
   };
 
   return (
-    <SignInPage
-      providers={[
-        {
-          id: "credentials",
-          name: "Email and Password",
-        },
-      ]}
-      signIn={handleSignIn}
-    />
+    // <SignInPage
+    //   providers={[
+    //     {
+    //       id: "credentials",
+    //       name: "Email and Password",
+    //     },
+    //   ]}
+    //   signIn={handleSignIn}
+    // />
+    <SignIn />
   );
 };
 
