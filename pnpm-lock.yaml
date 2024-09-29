@@ -36,8 +36,8 @@ importers:
         specifier: ^10.13.2
         version: 10.13.2
       firebase-tools:
-        specifier: ^13.19.0
-        version: 13.19.0(encoding@0.1.13)
+        specifier: ^13.20.0
+        version: 13.20.1(encoding@0.1.13)
       next:
         specifier: 14.2.13
         version: 14.2.13(@babel/core@7.25.2)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -180,6 +180,9 @@ packages:
 
   '@dabh/diagnostics@2.0.3':
     resolution: {integrity: sha512-hrlQOIi7hAfzsMqlGSFyVucrx38O+j6wiGOf//H2ecvIEqYN4ADBSS2iLMh5UFyDunCNniUIPk/q3riFv45xRA==}
+
+  '@electric-sql/pglite@0.2.9':
+    resolution: {integrity: sha512-KPItmBmPVZJGOv+qkCXmWyIPUPLQIyN+BVtV/zD+083aWSR/2ReaCUN+HJv6Jw4z9zJ00UCPQkeUXvOLuTlumg==}
 
   '@emotion/babel-plugin@11.12.0':
     resolution: {integrity: sha512-y2WQb+oP8Jqvvclh8Q55gLUyb7UFvgv7eJfsj7td5TToBrIUtPay2kMrZi4xjq9qw2vD0ZR5fSho0yqoFgX7Rw==}
@@ -2247,8 +2250,8 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
-  firebase-tools@13.19.0:
-    resolution: {integrity: sha512-NgzXJFhHz8EPDyoEKA8QXzUEcD05z+NJ3sSNmgCsPlmLa93jNzdFqpboS6fqXcnNYKFqwxnqGWE6d02wushPXg==}
+  firebase-tools@13.20.1:
+    resolution: {integrity: sha512-P4g71LkFiDzxoMvUqjsF6MWVTpKQ7g0Rcfj9hQQesM4w2FeNAImirAf55mzXewIEYQLTeWwRQm552Jg8r4MkNA==}
     engines: {node: '>=18.0.0 || >=20.0.0'}
     hasBin: true
 
@@ -2638,6 +2641,9 @@ packages:
     resolution: {integrity: sha512-gDYaKHJmnj4aWxyj6YHyXVpdQawtVLHU5cb+eztPGczf6cjuTdwve5ZIEfgXqH4e57An1D1AKf8CZ3kYrQRqYA==}
     engines: {node: '>= 0.4'}
 
+  is-buffer@1.1.6:
+    resolution: {integrity: sha512-NcdALwpXkTm5Zvvbk7owOUSvVvBKDgKP5/ewfXEznmQFfs4ZRmanOeKBTjRVjka3QFoN6XJ+9F3USqfHqTaU5w==}
+
   is-bun-module@1.2.1:
     resolution: {integrity: sha512-AmidtEM6D6NmUiLOvvU7+IePxjEjOzra2h0pSrsfSAcXwl/83zLLXDByafUJy9k/rKK0pvXMLdwKwGHlX2Ke6Q==}
 
@@ -2706,6 +2712,10 @@ packages:
   is-number-object@1.0.7:
     resolution: {integrity: sha512-k1U0IRzLMo7ZlYIfzRu23Oh6MiIFasgpb9X76eqfFZAqwH44UI4KTBvBYIZ1dSL9ZzChTB9ShHfLkR4pdW5krQ==}
     engines: {node: '>= 0.4'}
+
+  is-number@2.1.0:
+    resolution: {integrity: sha512-QUzH43Gfb9+5yckcrSA0VBDwEtDUchrk4F6tfJZQuNzDJbEDB9cZNzSfXGQ1jqmdDY/kl41lUOWM9syA8z8jlg==}
+    engines: {node: '>=0.10.0'}
 
   is-number@7.0.0:
     resolution: {integrity: sha512-41Cifkg6e8TylSpdtTpeLVMqvSBEVzTttHvERD741+pnZ8ANv0004MRL43QKPDlK9cGvNp6NZWZUBlbGXYxxng==}
@@ -2895,6 +2905,10 @@ packages:
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
 
+  kind-of@3.2.2:
+    resolution: {integrity: sha512-NOW9QQXMoZGg/oqnVNoNTTIFEIid1627WCffUBJEdMxYApq7mNE7CpzucIPc+ZQg25Phej7IJSmX3hO+oblOtQ==}
+    engines: {node: '>=0.10.0'}
+
   kuler@2.0.0:
     resolution: {integrity: sha512-Xq9nH7KlWZmXAtodXDDRE7vs6DU1gTU8zYDHDiWLSip45Egwq3plLHzPn27NgvzL2r1LMPC1vdqh98sQxtqj4A==}
 
@@ -3002,6 +3016,9 @@ packages:
   lru-cache@7.18.3:
     resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
     engines: {node: '>=12'}
+
+  lsofi@1.0.0:
+    resolution: {integrity: sha512-MKr9vM1MSm+TSKfI05IYxpKV1NCxpJaBLnELyIf784zYJ5KV9lGCE1EvpA2DtXDNM3fCuFeCwXUzim/fyQRi+A==}
 
   magic-string@0.30.11:
     resolution: {integrity: sha512-+Wri9p0QHMy+545hKww7YAu5NyzF8iomPL/RQazugQ9+Ez4Ic3mERMd8ZTX5rfK944j+560ZJi8iAwgak1Ac7A==}
@@ -4113,6 +4130,9 @@ packages:
   through2@0.4.2:
     resolution: {integrity: sha512-45Llu+EwHKtAZYTPPVn3XZHBgakWMN3rokhEv5hu596XP+cNgplMg+Gj+1nmAvj+L0K7+N49zBKx5rah5u0QIQ==}
 
+  through2@2.0.5:
+    resolution: {integrity: sha512-/mrRod8xqpA+IHSLyGCQ2s8SPHiCDEeQJSep1jqLYeEUClOFG2Qsh+4FU6G9VeqpZnGW/Su8LQGc4YKni5rYSQ==}
+
   through@2.3.8:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}
 
@@ -4684,6 +4704,8 @@ snapshots:
       colorspace: 1.1.4
       enabled: 2.0.0
       kuler: 2.0.0
+
+  '@electric-sql/pglite@0.2.9': {}
 
   '@emotion/babel-plugin@11.12.0':
     dependencies:
@@ -7199,8 +7221,9 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
-  firebase-tools@13.19.0(encoding@0.1.13):
+  firebase-tools@13.20.1(encoding@0.1.13):
     dependencies:
+      '@electric-sql/pglite': 0.2.9
       '@google-cloud/cloud-sql-connector': 1.3.4(encoding@0.1.13)
       '@google-cloud/pubsub': 4.7.2(encoding@0.1.13)
       abort-controller: 3.0.0
@@ -7235,6 +7258,7 @@ snapshots:
       leven: 3.1.0
       libsodium-wrappers: 0.7.15
       lodash: 4.17.21
+      lsofi: 1.0.0
       marked: 13.0.3
       marked-terminal: 7.1.0(marked@13.0.3)
       mime: 2.6.0
@@ -7763,6 +7787,8 @@ snapshots:
       call-bind: 1.0.7
       has-tostringtag: 1.0.2
 
+  is-buffer@1.1.6: {}
+
   is-bun-module@1.2.1:
     dependencies:
       semver: 7.6.3
@@ -7820,6 +7846,10 @@ snapshots:
   is-number-object@1.0.7:
     dependencies:
       has-tostringtag: 1.0.2
+
+  is-number@2.1.0:
+    dependencies:
+      kind-of: 3.2.2
 
   is-number@7.0.0: {}
 
@@ -8017,6 +8047,10 @@ snapshots:
     dependencies:
       json-buffer: 3.0.1
 
+  kind-of@3.2.2:
+    dependencies:
+      is-buffer: 1.1.6
+
   kuler@2.0.0: {}
 
   language-subtag-registry@0.3.23: {}
@@ -8114,6 +8148,11 @@ snapshots:
       yallist: 3.1.1
 
   lru-cache@7.18.3: {}
+
+  lsofi@1.0.0:
+    dependencies:
+      is-number: 2.1.0
+      through2: 2.0.5
 
   magic-string@0.30.11:
     dependencies:
@@ -9366,6 +9405,11 @@ snapshots:
     dependencies:
       readable-stream: 1.0.34
       xtend: 2.1.2
+
+  through2@2.0.5:
+    dependencies:
+      readable-stream: 2.3.8
+      xtend: 4.0.2
 
   through@2.3.8: {}
 
