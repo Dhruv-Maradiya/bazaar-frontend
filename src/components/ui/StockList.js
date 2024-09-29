@@ -1,29 +1,28 @@
-import React, { useEffect, useState } from "react";
-import PortfolioCard from "./PortfolioCard";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import {
+  Box,
+  IconButton,
   Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableRow,
-  IconButton,
   Typography,
-  Box,
   useMediaQuery,
 } from "@mui/material";
 import { green, red } from "@mui/material/colors";
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import StockUpArrow from "./StockUpArrow";
+import { useTheme } from "@mui/material/styles";
 import StockDownArrow from "./StockDownArrow";
-import { useTheme } from '@mui/material/styles';
+import StockUpArrow from "./StockUpArrow";
+import PortfolioCard from "./PortfolioCard";
 
 const initialStocks = [
-  { name: "Apple", symbol: "AAPL", price: 150, change: -1.25, percentage: -0.83, positive: false },
-  { name: "Google", symbol: "GOOGL", price: 2800, change: 15.6, percentage: 0.56, positive: true },
-  { name: "Amazon", symbol: "AMZN", price: 3400, change: -12.9, percentage: -0.38, positive: false },
-  { name: "Microsoft", symbol: "MSFT", price: 299, change: 2.45, percentage: 0.82, positive: true },
-  { name: "Tesla", symbol: "TSLA", price: 720, change: -9.20, percentage: -1.27, positive: false },
+  { name: "Apple", symbol: "https://s3-symbol-logo.tradingview.com/apple--600.png", price: 150, change: -1.25, percentage: -0.83, positive: false },
+  { name: "Google", symbol: "https://s3-symbol-logo.tradingview.com/alphabet--big.svg", price: 2800, change: 15.6, percentage: 0.56, positive: true },
+  { name: "Amazon", symbol: "https://s3-symbol-logo.tradingview.com/amazon--600.png", price: 3400, change: -12.9, percentage: -0.38, positive: false },
+  { name: "Microsoft", symbol: "https://s3-symbol-logo.tradingview.com/microsoft--600.png", price: 299, change: 2.45, percentage: 0.82, positive: true },
+  { name: "Tesla", symbol: "https://s3-symbol-logo.tradingview.com/tesla--600.png", price: 720, change: -9.20, percentage: -1.27, positive: false },
 ];
 
 const getRandomChange = () => {
