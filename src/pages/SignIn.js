@@ -96,80 +96,79 @@ const SignIn = () => {
             console.error(error);
         }
     };
-
+    const router = useRouter();
     return (
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Container
-          component="main"
-          maxWidth="xs"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100vh",
-          }}
-        >
-          <Paper
-            elevation={3}
-            style={{
-              padding: "20px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              backgroundColor: theme.palette.background.paper,
-            }}
-          >
-            <Image src={BullLogo} width={100} height={100} alt="Bull Logo" />
-            <form className={classes.form} onSubmit={handleSignIn}>
-              <Box>
-                <label htmlFor="email">Email</label>
-                <div className={classes.inputForm}>
-                  <input
-                    id="email"
-                    placeholder="Enter your Email"
-                    className={classes.input}
-                    type="text"
-                    name="email"
-                    required
-                  />
-                </div>
-              </Box>
-              <Box>
-                <label htmlFor="password">Password</label>
-                <div className={classes.inputForm}>
-                  <input
-                    id="password"
-                    placeholder="Enter your Password"
-                    className={classes.input}
-                    type="password"
-                    name="password"
-                    required
-                  />
-                </div>
-              </Box>
-              <div className={classes.flexRow}>
-                <div>
-                  <input
-                    type="checkbox"
-                    id="remember"
-                    aria-label="Remember me"
-                  />
-                  <label htmlFor="remember">Remember me</label>
-                </div>
-                <span className={classes.span}>Forgot password?</span>
-              </div>
-              <button type="submit" className={classes.buttonSubmit}>
-                Sign In
-              </button>
-              <p className={classes.signUpText}>
-                Don&apos;t have an account?{" "}
-                <span className={classes.span}>Sign Up</span>
-              </p>
-            </form>
-          </Paper>
-        </Container>
-      </ThemeProvider>
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Container
+                component="main"
+                maxWidth="xs"
+                style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "100vh",
+                }}
+            >
+                <Paper
+                    elevation={3}
+                    style={{
+                        padding: "20px",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        backgroundColor: theme.palette.background.paper,
+                    }}
+                >
+                    <Image src={BullLogo} width={100} height={100} alt="Bull Logo" />
+                    <form className={classes.form} onSubmit={handleSignIn}>
+                        <Box>
+                            <label htmlFor="email">Email</label>
+                            <div className={classes.inputForm}>
+                                <input
+                                    id="email"
+                                    placeholder="Enter your Email"
+                                    className={classes.input}
+                                    type="text"
+                                    name="email"
+                                    required
+                                />
+                            </div>
+                        </Box>
+                        <Box>
+                            <label htmlFor="password">Password</label>
+                            <div className={classes.inputForm}>
+                                <input
+                                    id="password"
+                                    placeholder="Enter your Password"
+                                    className={classes.input}
+                                    type="password"
+                                    name="password"
+                                    required
+                                />
+                            </div>
+                        </Box>
+                        <div className={classes.flexRow}>
+                            <div>
+                                <input
+                                    type="checkbox"
+                                    id="remember"
+                                    aria-label="Remember me"
+                                />
+                                <label htmlFor="remember">Remember me</label>
+                            </div>
+                            <div onClick={() => router.push("/auth/forgot-password")} className={classes.span}>Forgot password?</div>
+                        </div>
+                        <button type="submit" className={classes.buttonSubmit}>
+                            Sign In
+                        </button>
+                        <p className={classes.signUpText}>
+                            Don&apos;t have an account ask someone{" "}
+                        </p>
+                    </form>
+                </Paper>
+            </Container>
+        </ThemeProvider>
     );
 };
 
