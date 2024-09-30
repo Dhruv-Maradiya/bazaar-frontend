@@ -89,7 +89,7 @@ const StockList = () => {
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Image width={32} height={32} src={stock.symbol} variant="body2" />
+                    <Image width={32} height={32} src={stock.symbol} alt={stock.name} variant="body2" />
                   </TableCell>
                   <TableCell align="right">
                     <Typography sx={{ fontWeight: 'bold', fontSize: '1.2rem' }} variant="body2">
