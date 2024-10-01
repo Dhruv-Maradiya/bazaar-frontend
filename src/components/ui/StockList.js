@@ -14,8 +14,10 @@ import {
 import { green, red } from "@mui/material/colors";
 import { useTheme } from "@mui/material/styles";
 import StockDownArrow from "./StockDownArrow";
+import { useState, useEffect } from "react";
 import StockUpArrow from "./StockUpArrow";
 import PortfolioCard from "./PortfolioCard";
+import Image from 'next/image';
 
 const initialStocks = [
   { name: "Apple", symbol: "https://s3-symbol-logo.tradingview.com/apple--600.png", price: 150, change: -1.25, percentage: -0.83, positive: false },
@@ -64,8 +66,8 @@ const StockList = () => {
       {/* Stock List */}
       <Box
         sx={{
-          flex: 3, // Stock list takes more space
-          marginRight: isMobile ? '0' : '1rem', // Add margin on larger screens
+          flex: 3,
+          marginRight: isMobile ? '0' : '1rem',
         }}
       >
         <TableContainer component={Paper} sx={{ borderRadius: 2, maxWidth: '100%' }}>
@@ -87,7 +89,7 @@ const StockList = () => {
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">{stock.symbol}</Typography>
+                    <Image width={32} height={32} src={stock.symbol} alt={stock.name} variant="body2" />
                   </TableCell>
                   <TableCell align="right">
                     <Typography sx={{ fontWeight: 'bold', fontSize: '1.2rem' }} variant="body2">
