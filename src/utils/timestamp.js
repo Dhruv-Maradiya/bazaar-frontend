@@ -10,4 +10,11 @@ const convertFirebaseTimestampToDate = (timestamp) => {
   return timestamp;
 };
 
-export { convertFirebaseTimestampToDate };
+const TransactionTypeMap = {
+  BUY: "Buy",
+  SELL: "Sell",
+  "SHORT SELL": "Short Sell",
+  "SQUARE OFF": "Square Off",
+};
+
+export { convertFirebaseTimestampToDate, TransactionTypeMap };

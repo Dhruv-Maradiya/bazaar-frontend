@@ -99,6 +99,17 @@ const customTheme = createTheme({
           disabledBackground: `rgba(${lightColor}, 0.12)`,
           focus: `rgba(${lightColor}, 0.12)`,
         },
+        customColors: {
+          dark: `rgb(${darkColor})`,
+          main: `rgb(${lightColor})`,
+          light: `rgb(${lightColor})`,
+          lightPaperBg: whiteColor,
+          darkPaperBg: darkPaperBgColor,
+          bodyBg: "#F8F7FA",
+          trackBg: "#F1F0F2",
+          avatarBg: "#F6F6F7",
+          tableHeaderBg: "#F6F6F7",
+        },
       },
     },
     dark: {
@@ -122,6 +133,17 @@ const customTheme = createTheme({
           disabledBackground: `rgba(${darkColor}, 0.12)`,
           focus: `rgba(${darkColor}, 0.12)`,
         },
+        customColors: {
+          dark: `rgb(${darkColor})`,
+          main: `rgb(${darkColor})`,
+          light: `rgb(${lightColor})`,
+          lightPaperBg: whiteColor,
+          darkPaperBg: darkPaperBgColor,
+          bodyBg: "#25293C",
+          trackBg: "#3B405B",
+          avatarBg: "#4A5072",
+          tableHeaderBg: "#4A5072",
+        },
       },
     },
   },
@@ -132,6 +154,77 @@ const customTheme = createTheme({
       md: 600,
       lg: 1200,
       xl: 1536,
+    },
+  },
+  components: {
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          color: (theme) => theme.palette.text.secondary,
+        },
+      },
+    },
+    MuiInput: {
+      styleOverrides: {
+        root: {
+          "&:before": {
+            borderBottom: (theme) =>
+              `1px solid rgba(${theme.palette.customColors.main}, 0.22)`,
+          },
+          "&:hover:not(.Mui-disabled):before": {
+            borderBottom: (theme) =>
+              `1px solid rgba(${theme.palette.customColors.main}, 0.32)`,
+          },
+          "&.Mui-disabled:before": {
+            borderBottomStyle: "solid",
+          },
+        },
+      },
+    },
+    MuiFilledInput: {
+      styleOverrides: {
+        root: {
+          backgroundColor: (theme) =>
+            `rgba(${theme.palette.customColors.main}, 0.04)`,
+          "&:hover:not(.Mui-disabled)": {
+            backgroundColor: (theme) =>
+              `rgba(${theme.palette.customColors.main}, 0.08)`,
+          },
+          "&:before": {
+            borderBottom: (theme) =>
+              `1px solid rgba(${theme.palette.customColors.main}, 0.22)`,
+          },
+          "&:hover:not(.Mui-disabled):before": {
+            borderBottom: (theme) =>
+              `1px solid rgba(${theme.palette.customColors.main}, 0.32)`,
+          },
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          "&:hover:not(.Mui-focused):not(.Mui-disabled):not(.Mui-error) .MuiOutlinedInput-notchedOutline":
+            {
+              borderColor: (theme) =>
+                `rgba(${theme.palette.customColors.main}, 0.32)`,
+            },
+          "&:hover.Mui-error .MuiOutlinedInput-notchedOutline": {
+            borderColor: (theme) => theme.palette.error.main,
+          },
+          "& .MuiOutlinedInput-notchedOutline": {
+            borderColor: (theme) =>
+              `rgba(${theme.palette.customColors.main}, 0.22)`,
+          },
+          "&.Mui-disabled .MuiOutlinedInput-notchedOutline": {
+            borderColor: (theme) => theme.palette.text.disabled,
+          },
+          "&.Mui-focused": {
+            boxShadow: (theme) =>
+              `0 2px 3px 0 rgba(${theme.palette.customColors.main}, 0.1)`,
+          },
+        },
+      },
     },
   },
 });

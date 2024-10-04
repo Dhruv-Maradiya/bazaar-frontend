@@ -40,6 +40,10 @@ const StockChart = () => {
             zoomRef.current = [value.xaxis.min, value.xaxis.max];
           },
         },
+        zoom: {
+          enabled: true,
+          type: "xy",
+        },
       },
       tooltip: {
         enabled: true,

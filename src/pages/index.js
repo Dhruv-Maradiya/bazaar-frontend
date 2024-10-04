@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import { compose } from "@reduxjs/toolkit";
 import { PageContainer } from "@toolpad/core";
-import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
 
 const stocks = [
@@ -18,9 +17,7 @@ const stocks = [
   { name: "Amazon", symbol: "AMZN", price: 3400 },
 ];
 
-const StockList = ({ stocks: _stocks }) => {
-  console.log(_stocks);
-
+const StockList = () => {
   return (
     <PageContainer breadCrumbs={[]}>
       <TableContainer component={Paper}>
@@ -47,9 +44,4 @@ const StockList = ({ stocks: _stocks }) => {
   );
 };
 
-export default compose(
-  firestoreConnect([{ collection: "stocks" }]),
-  connect((state, props) => ({
-    stocks: state.firestore.ordered.stocks,
-  }))
-)(StockList);
+export default compose(firestoreConnect([{ collection: "stocks" }]))(StockList);

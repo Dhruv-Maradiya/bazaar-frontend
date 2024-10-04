@@ -53,7 +53,7 @@ const AuthProvider = ({ children }) => {
   const handleLogout = async () => {
     await auth.signOut();
 
-    router.push("/auth/login");
+    window.location.reload();
   };
 
   const handleSendResetPasswordLink = async (params) => {
@@ -79,5 +79,7 @@ const AuthProvider = ({ children }) => {
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 };
 
-export { AuthContext, AuthProvider };
+const AuthConsumer = AuthContext.Consumer;
+
+export { AuthConsumer, AuthContext, AuthProvider };
 

@@ -23,11 +23,14 @@ import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
 import { formatPercent, formatCurr } from "@/utils/format-number";
 import StockChart from "./StockChart";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import SellIcon from "@mui/icons-material/Sell";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import Buy from "./actions/Buy";
+import Sell from "./actions/Sell";
+import { useSelector } from "react-redux";
 
 const StyledLink = styled(Link)`
   color: ${({ theme }) => theme.palette.text.secondary};
@@ -65,7 +68,17 @@ const Breadcrumbs = ({ currentPage }) => (
   </MuiBreadcrumbs>
 );
 
-const StockDetailsView = ({ stock, candles }) => {
+const StockDetailsView = (props) => {
+  const [buyOpen, setBuyOpen] = useState(false);
+  const [sellOpen, setSellOpen] = useState(false);
+  const [buyType, setBuyType] = useState("BUY");
+  const [sellType, setSellType] = useState("SELL");
+
+  const stock = useSelector(
+    (state) => state.firestore.data?.stocks?.[props.stockId]
+  );
+  const candles = useSelector((state) => state.firestore.data.candles);
+
   const { changeInPercentage, changeInValue } = useMemo(() => {
     if (!stock) return {};
 
@@ -173,6 +186,10 @@ const StockDetailsView = ({ stock, candles }) => {
                   variant="contained"
                   color="success"
                   startIcon={<ShoppingCartIcon />}
+                  onClick={() => {
+                    setBuyOpen(true);
+                    setBuyType("BUY");
+                  }}
                 >
                   Buy
                 </Button>
@@ -182,6 +199,10 @@ const StockDetailsView = ({ stock, candles }) => {
                   variant="contained"
                   color="error"
                   startIcon={<SellIcon />}
+                  onClick={() => {
+                    setSellOpen(true);
+                    setSellType("SELL");
+                  }}
                 >
                   Sell
                 </Button>
@@ -191,6 +212,10 @@ const StockDetailsView = ({ stock, candles }) => {
                   variant="contained"
                   color="primary"
                   startIcon={<ShowChartIcon />}
+                  onClick={() => {
+                    setBuyOpen(true);
+                    setBuyType("SHORT SELL");
+                  }}
                 >
                   Short Sell
                 </Button>
@@ -200,6 +225,10 @@ const StockDetailsView = ({ stock, candles }) => {
                   variant="contained"
                   color="warning"
                   startIcon={<CheckBoxIcon />}
+                  onClick={() => {
+                    setSellOpen(true);
+                    setSellType("SQUARE OFF");
+                  }}
                 >
                   Square Off
                 </Button>
@@ -208,6 +237,18 @@ const StockDetailsView = ({ stock, candles }) => {
           </Box>
         </Box>
       </Stack>
+      <Buy
+        stock={stock}
+        open={buyOpen}
+        handleClose={() => setBuyOpen(false)}
+        type={buyType}
+      />
+      <Sell
+        stock={stock}
+        open={sellOpen}
+        handleClose={() => setSellOpen(false)}
+        type={sellType}
+      />
     </Box>
   );
 };
@@ -221,10 +262,5 @@ export default compose(
       subcollections: [{ collection: "candles" }],
       storeAs: "candles",
     },
-  ]),
-  connect((state, props) => ({
-    stock:
-      state.firestore.data.stocks && state.firestore.data.stocks[props.stockId],
-    candles: state.firestore.ordered.candles,
-  }))
+  ])
 )(StockDetailsView);

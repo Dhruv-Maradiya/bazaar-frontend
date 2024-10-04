@@ -1,13 +1,27 @@
+import customTheme from "@/configs/theme/theme";
 import { useAuth } from "@/hooks/useAuth";
 import NAVIGATION from "@/navigation/navigation";
+import { compose } from "@reduxjs/toolkit";
 import { AppProvider } from "@toolpad/core/nextjs";
 import { useRouter } from "next/router";
-import customTheme from "@/configs/theme/theme";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { firestoreConnect } from "react-redux-firebase";
 
 const CustomAppProvider = ({ children, settings }) => {
   const router = useRouter();
 
   const { logout, user } = useAuth();
+
+  const firestoreUser = useSelector(
+    (state) => state.firestore.data?.firestoreUser
+  );
+
+  useEffect(() => {
+    if (firestoreUser?.disabled && !user.isEmpty && user.isLoaded) {
+      logout();
+    }
+  }, [firestoreUser?.disabled, logout, user]);
 
   return (
     <AppProvider
@@ -38,4 +52,20 @@ const CustomAppProvider = ({ children, settings }) => {
   );
 };
 
-export default CustomAppProvider;
+export default compose(
+  firestoreConnect((props) => {
+    if (!props.user?.uid) return [];
+    return [
+      {
+        collection: "users",
+        doc: props.user.uid,
+        storeAs: "firestoreUser",
+      },
+      {
+        collection: "portfolios",
+        doc: props.user.uid,
+        storeAs: "portfolio",
+      },
+    ];
+  })
+)(CustomAppProvider);
