@@ -17,7 +17,6 @@ const BlankLayoutWrapper = styled(Box)(({ theme }) => ({
   "& .content-right": {
     display: "flex",
     minHeight: "100vh",
-    overflowX: "hidden",
     position: "relative",
   },
 }));
@@ -27,7 +26,7 @@ const BlankLayout = ({ children }) => {
     <BlankLayoutWrapper className="layout-wrapper">
       <Box
         className="app-content"
-        sx={{ overflow: "hidden", minHeight: "100vh", position: "relative" }}
+        sx={{ minHeight: "100vh", position: "relative" }}
       >
         {children}
       </Box>

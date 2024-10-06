@@ -1,5 +1,9 @@
 import { sellStock } from "@/store/settings/user";
 import { formatCurr } from "@/utils/format-number";
+import {
+  TransactionTypeMap,
+  TransactionTypeMapSellMap,
+} from "@/utils/timestamp";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Alert,
@@ -28,7 +32,7 @@ const Sell = ({ stock, open, handleClose, type }) => {
   const [shares, setShares] = useState(1);
   const [activeStep, setActiveStep] = useState(0);
 
-  const portfolio = useSelector((state) => state.firestore.data.portfolio);
+  const portfolio = useSelector((state) => state.firestore.data.firestoreUser);
   const dispatch = useDispatch();
 
   const _handleClose = () => {
@@ -77,13 +81,17 @@ const Sell = ({ stock, open, handleClose, type }) => {
   const { currentHoldings, profitLoss, currentValue, saleAmount } =
     useMemo(() => {
       const currentHoldings = portfolio?.data?.find(
-        (item) => item.stock.id === stock.id
+        (item) =>
+          item.stock.id === stock.id &&
+          item.type === TransactionTypeMapSellMap[type]
       );
 
       const totalValue = currentHoldings?.shares * currentHoldings?.price;
       const currentValue = currentHoldings?.shares * stock.price;
       const saleAmount = shares * stock.price;
-      const profitLoss = shares * stock.price - shares * currentHoldings?.price;
+      const profitLoss =
+        (shares * stock.price - shares * currentHoldings?.price) *
+        (type === "SELL" ? 1 : -1);
 
       return {
         currentHoldings,
@@ -92,7 +100,7 @@ const Sell = ({ stock, open, handleClose, type }) => {
         currentValue,
         saleAmount,
       };
-    }, [portfolio?.data, shares, stock.id, stock.price]);
+    }, [portfolio?.data, shares, stock.id, stock.price, type]);
 
   const content = currentHoldings ? (
     <DialogContent>
@@ -214,9 +222,9 @@ const Sell = ({ stock, open, handleClose, type }) => {
             </Box>
 
             <Alert severity="warning" sx={{ mt: 2 }}>
-              You are about to sell <strong>{shares}</strong> shares of{" "}
-              <strong>{stock.name}</strong> at{" "}
-              <strong>{formatCurr(stock.price)}</strong> per share. Are you
+              You are about to {TransactionTypeMap[type]}{" "}
+              <strong>{shares}</strong> shares of <strong>{stock.name}</strong>{" "}
+              at <strong>{formatCurr(stock.price)}</strong> per share. Are you
               sure?
             </Alert>
           </Box>
@@ -241,7 +249,7 @@ const Sell = ({ stock, open, handleClose, type }) => {
         }}
       >
         <Typography variant="h6">
-          Sell{" "}
+          {TransactionTypeMap[type]}{" "}
           <Typography
             sx={{
               fontWeight: 600,
@@ -296,7 +304,7 @@ const Sell = ({ stock, open, handleClose, type }) => {
           </Button>
           {currentHoldings ? (
             <Button onClick={handleSell} color="success" variant="contained">
-              Sell
+              {TransactionTypeMap[type]}
             </Button>
           ) : null}
         </Box>

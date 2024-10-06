@@ -1,28 +1,10 @@
-import StockDetailsView from "@/components/stocks/StockDetailsView";
-import TrendingStocks from "@/components/stocks/TrendingStocks";
-import { Box } from "@mui/system";
+import StockView from "@/components/stocks/StockView";
 import { useParams } from "next/navigation";
 
 const StockDetails = () => {
   const params = useParams();
 
-  if (!params || !params.id) {
-    return null;
-  }
-
-  return (
-    <Box
-      sx={{
-        gap: 3,
-        display: "flex",
-        flexDirection: "column",
-        p: 3,
-      }}
-    >
-      <TrendingStocks />
-      <StockDetailsView stockId={params.id} />
-    </Box>
-  );
+  return <StockView stockId={params.id} />;
 };
 
 export default StockDetails;

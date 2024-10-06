@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { useAuth } from "@/hooks/useAuth";
 import { useDispatch } from "react-redux";
 import { fetchAllStocks } from "@/store/settings/user";
+import { Box } from "@mui/system";
 
 const AuthGuard = (props) => {
   const { children, fallback } = props;
@@ -30,7 +31,7 @@ const AuthGuard = (props) => {
     return fallback;
   }
 
-  return <>{children}</>;
+  return <Box>{children}</Box>;
 };
 
 export default AuthGuard;

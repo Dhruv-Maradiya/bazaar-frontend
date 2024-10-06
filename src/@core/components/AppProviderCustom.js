@@ -61,11 +61,6 @@ export default compose(
         doc: props.user.uid,
         storeAs: "firestoreUser",
       },
-      {
-        collection: "portfolios",
-        doc: props.user.uid,
-        storeAs: "portfolio",
-      },
     ];
   })
 )(CustomAppProvider);

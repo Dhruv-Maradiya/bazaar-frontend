@@ -26,8 +26,8 @@ import { AuthConsumer, AuthProvider } from "@/context/AuthContext";
 import { SettingsConsumer, SettingsProvider } from "@/context/settingContext";
 import UserLayout from "@/layouts/UserLayout";
 import { createEmotionCache } from "@/utils/emotion-cache";
-import { ReactReduxFirebaseProvider } from "react-redux-firebase";
 import dynamic from "next/dynamic";
+import { ReactReduxFirebaseProvider } from "react-redux-firebase";
 
 const clientSideEmotionCache = createEmotionCache();
 

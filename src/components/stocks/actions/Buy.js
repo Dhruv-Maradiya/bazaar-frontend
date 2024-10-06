@@ -1,5 +1,6 @@
 import { buyStock } from "@/store/settings/user";
 import { formatCurr } from "@/utils/format-number";
+import { TransactionTypeMap } from "@/utils/timestamp";
 import CloseIcon from "@mui/icons-material/Close";
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
@@ -30,7 +31,9 @@ const Buy = ({ stock, open, handleClose, type }) => {
   const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
-  const { portfolio } = useSelector((state) => state.firestore.data);
+  const { firestoreUser: portfolio } = useSelector(
+    (state) => state.firestore.data
+  );
 
   const _handleClose = () => {
     setShares(1);
@@ -88,7 +91,7 @@ const Buy = ({ stock, open, handleClose, type }) => {
         }}
       >
         <Typography variant="h6">
-          {type === "BUY" ? "Buy" : "Short Sell"}{" "}
+          {TransactionTypeMap[type]}{" "}
           <Typography
             sx={{
               fontWeight: 600,
@@ -207,7 +210,8 @@ const Buy = ({ stock, open, handleClose, type }) => {
               </Box>
 
               <Alert severity="warning" sx={{ mt: 2 }}>
-                You are about to buy <strong>{shares}</strong> shares of{" "}
+                You are about to {TransactionTypeMap[type]}{" "}
+                <strong>{shares}</strong> shares of{" "}
                 <strong>{stock.name}</strong> at{" "}
                 <strong>{formatCurr(stock.price)}</strong> per share. Are you
                 sure?
@@ -244,7 +248,7 @@ const Buy = ({ stock, open, handleClose, type }) => {
             color="success"
             variant="contained"
             loadingPosition="start"
-            disabled={loading}
+            disabled={loading || portfolio.remaining < shares * stock.price}
           >
             {loading ? (
               <CircularProgress

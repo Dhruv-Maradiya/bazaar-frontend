@@ -14,7 +14,22 @@ const TransactionTypeMap = {
   BUY: "Buy",
   SELL: "Sell",
   "SHORT SELL": "Short Sell",
-  "SQUARE OFF": "Square Off",
+  "SQUARE OFF": "Square off",
 };
 
-export { convertFirebaseTimestampToDate, TransactionTypeMap };
+const TransactionTypeMapSellMap = {
+  SELL: "BUY",
+  "SQUARE OFF": "SHORT SELL",
+};
+
+const TransactionTypeMapBuyMap = {
+  BUY: ["BUY", "SELL"],
+  "SHORT SELL": ["SHORT SELL", "SQUARE OFF"],
+};
+
+export {
+  convertFirebaseTimestampToDate,
+  TransactionTypeMap,
+  TransactionTypeMapSellMap,
+  TransactionTypeMapBuyMap,
+};

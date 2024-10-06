@@ -2,9 +2,14 @@ import {
   calculateChangeInPercentage,
   calculateChangeInValue,
 } from "@/utils/change";
+import { formatCurr, formatPercent } from "@/utils/format-number";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import SellIcon from "@mui/icons-material/Sell";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import ShowChartIcon from "@mui/icons-material/ShowChart";
 import {
   Button,
   Chip,
@@ -19,18 +24,12 @@ import { styled } from "@mui/material/styles";
 import { Box, Stack } from "@mui/system";
 import { compose } from "@reduxjs/toolkit";
 import Link from "next/link";
-import { connect } from "react-redux";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
-import { formatPercent, formatCurr } from "@/utils/format-number";
-import StockChart from "./StockChart";
-import { useMemo, useState } from "react";
-import SellIcon from "@mui/icons-material/Sell";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import ShowChartIcon from "@mui/icons-material/ShowChart";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import Buy from "./actions/Buy";
 import Sell from "./actions/Sell";
-import { useSelector } from "react-redux";
+import StockChart from "./StockChart";
 
 const StyledLink = styled(Link)`
   color: ${({ theme }) => theme.palette.text.secondary};
@@ -68,15 +67,13 @@ const Breadcrumbs = ({ currentPage }) => (
   </MuiBreadcrumbs>
 );
 
-const StockDetailsView = (props) => {
+const StockDetailsView = ({ stockId }) => {
   const [buyOpen, setBuyOpen] = useState(false);
   const [sellOpen, setSellOpen] = useState(false);
   const [buyType, setBuyType] = useState("BUY");
   const [sellType, setSellType] = useState("SELL");
 
-  const stock = useSelector(
-    (state) => state.firestore.data?.stocks?.[props.stockId]
-  );
+  const stock = useSelector((state) => state.firestore.data?.stocks?.[stockId]);
   const candles = useSelector((state) => state.firestore.data.candles);
 
   const { changeInPercentage, changeInValue } = useMemo(() => {
@@ -97,6 +94,8 @@ const StockDetailsView = (props) => {
         justifyContent: "center",
         gap: 2,
         flexDirection: "column",
+        width: "100%",
+        mt: "80px",
       }}
     >
       <Stack gap={1}>
@@ -254,13 +253,15 @@ const StockDetailsView = (props) => {
 };
 
 export default compose(
-  firestoreConnect((props) => [
-    { collection: "stocks", doc: props.stockId },
-    {
-      collection: "stocks",
-      doc: props.stockId,
-      subcollections: [{ collection: "candles" }],
-      storeAs: "candles",
-    },
-  ])
+  firestoreConnect((props) => {
+    return [
+      { collection: "stocks", doc: props.stockId },
+      {
+        collection: "stocks",
+        doc: props.stockId,
+        subcollections: [{ collection: "candles" }],
+        storeAs: "candles",
+      },
+    ];
+  })
 )(StockDetailsView);

@@ -3,6 +3,10 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { db } from "@/lib/firebase/init";
 import toast from "react-hot-toast";
 import firebase from "firebase/compat/app";
+import {
+  TransactionTypeMap,
+  TransactionTypeMapSellMap,
+} from "@/utils/timestamp";
 
 // ** Buy Stock
 export const buyStock = createAsyncThunk(
@@ -12,10 +16,10 @@ export const buyStock = createAsyncThunk(
     { rejectWithValue, getState }
   ) => {
     try {
-      const currentPortfolio = getState().firestore.data.portfolio;
+      const currentPortfolio = getState().firestore.data.firestoreUser;
 
       const alreadyInvested = currentPortfolio.data?.find(
-        (stock) => stock.stock.id === stockId
+        (stock) => stock.stock.id === stockId && stock.type === type
       );
 
       let newData;
@@ -28,7 +32,7 @@ export const buyStock = createAsyncThunk(
         const newPrice = totalMoney / totalShares;
 
         newData = currentPortfolio.data.map((stock) => {
-          if (stock.stock.id === stockId) {
+          if (stock.stock.id === stockId && stock.type === type) {
             return {
               stock: db.collection("stocks").doc(stockId),
               shares: totalShares,
@@ -48,7 +52,7 @@ export const buyStock = createAsyncThunk(
       }
 
       await db.runTransaction(async (transaction) => {
-        transaction.update(db.collection("portfolios").doc(userId), {
+        transaction.update(db.collection("users").doc(userId), {
           remaining: firebase.firestore.FieldValue.increment(-price * shares),
           data: newData,
           invested: firebase.firestore.FieldValue.increment(price * shares),
@@ -69,9 +73,7 @@ export const buyStock = createAsyncThunk(
         );
       });
 
-      toast.success(
-        `${type === "BUY" ? "Buy" : "Short sell"} order placed successfully`
-      );
+      toast.success(`${TransactionTypeMap[type]} order placed successfully`);
     } catch (error) {
       toast.error("Error buying stock please try again");
 
@@ -88,10 +90,12 @@ export const sellStock = createAsyncThunk(
     { rejectWithValue, getState }
   ) => {
     try {
-      const currentPortfolio = getState().firestore.data.portfolio;
+      const currentPortfolio = getState().firestore.data.firestoreUser;
 
       const currentHoldings = currentPortfolio?.data?.find(
-        (item) => item.stock.id === stockId
+        (item) =>
+          item.stock.id === stockId &&
+          item.type === TransactionTypeMapSellMap[type]
       );
 
       if (!currentHoldings) {
@@ -106,7 +110,10 @@ export const sellStock = createAsyncThunk(
         newData = firebase.firestore.FieldValue.arrayRemove([currentHoldings]);
       } else {
         newData = currentPortfolio.data.map((stock) => {
-          if (stock.stock.id === stockId) {
+          if (
+            stock.stock.id === stockId &&
+            stock.type === TransactionTypeMapSellMap[type]
+          ) {
             return {
               ...stock,
               shares: stock.shares - shares,
@@ -118,12 +125,13 @@ export const sellStock = createAsyncThunk(
 
       await db.runTransaction(async (transaction) => {
         // Update portfolio
-        transaction.update(db.collection("portfolios").doc(userId), {
+        transaction.update(db.collection("users").doc(userId), {
           remaining: firebase.firestore.FieldValue.increment(price * shares),
           data: newData,
           invested: firebase.firestore.FieldValue.increment(
             currentHoldings.price * shares * -1
           ),
+          total: firebase.firestore.FieldValue.increment(profitOrLoss),
         });
 
         // Add new transaction to subcollection transaction of users
@@ -155,8 +163,14 @@ export const sellStock = createAsyncThunk(
 // ** Fetch All Stocks
 export const fetchAllStocks = createAsyncThunk(
   "stocks/fetchAllStocks",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, getState }) => {
     try {
+      const { stocks: storedStocks } = getState().settings;
+
+      if (storedStocks.length) {
+        return storedStocks;
+      }
+
       const stocks = await db.collection("stocks").get();
 
       const data = stocks.docs.map((doc) => ({
