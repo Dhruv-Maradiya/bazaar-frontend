@@ -1,4 +1,5 @@
 import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
 
 const Timestamp = firebase.firestore.Timestamp;
 
