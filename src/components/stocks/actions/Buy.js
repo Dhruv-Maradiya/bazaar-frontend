@@ -50,16 +50,15 @@ const Buy = ({ stock, open, handleClose, type }) => {
   };
 
   const handleSharesChange = (e) => {
-    setShares(e.target.value);
+    setShares(parseInt(e.target.value));
   };
 
   const handleBuy = async () => {
     try {
-      setLoading(true);
-
       if (activeStep === 0) {
         setActiveStep(1);
       } else {
+        setLoading(true);
         let results = await dispatch(
           buyStock({
             stockId: stock.id,

@@ -107,7 +107,7 @@ export const sellStock = createAsyncThunk(
       let newData = {};
 
       if (currentHoldings.shares - shares === 0) {
-        newData = firebase.firestore.FieldValue.arrayRemove([currentHoldings]);
+        newData = firebase.firestore.FieldValue.arrayRemove(currentHoldings);
       } else {
         newData = currentPortfolio.data.map((stock) => {
           if (
@@ -153,6 +153,7 @@ export const sellStock = createAsyncThunk(
         `Stock ${type === "SELL" ? "sold" : "squared off"} successfully`
       );
     } catch (error) {
+      console.log(error);
       toast.error("Error selling stock please try again");
 
       return rejectWithValue(error);

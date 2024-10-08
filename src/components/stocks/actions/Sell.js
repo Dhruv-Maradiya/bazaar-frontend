@@ -50,7 +50,7 @@ const Sell = ({ stock, open, handleClose, type }) => {
   };
 
   const handleSharesChange = (e) => {
-    setShares(e.target.value);
+    setShares(parseInt(e.target.value));
   };
 
   const handleSell = async () => {
