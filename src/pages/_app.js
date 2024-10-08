@@ -22,12 +22,12 @@ import GuestGuard from "@/@core/components/guards/GuestGuard";
 import FallbackSpinner from "@/@core/components/spinner";
 import WindowWrapper from "@/@core/components/window-wrapper";
 import themeConfig from "@/configs/themeConfig";
-import { AuthProvider } from "@/context/AuthContext";
+import { AuthConsumer, AuthProvider } from "@/context/AuthContext";
 import { SettingsConsumer, SettingsProvider } from "@/context/settingContext";
 import UserLayout from "@/layouts/UserLayout";
 import { createEmotionCache } from "@/utils/emotion-cache";
-import { ReactReduxFirebaseProvider } from "react-redux-firebase";
 import dynamic from "next/dynamic";
+import { ReactReduxFirebaseProvider } from "react-redux-firebase";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -73,21 +73,27 @@ function App(props) {
               {({ settings }) => {
                 return (
                   <AuthProvider>
-                    <Guard fallback={<FallbackSpinner />}>
-                      <CustomAppProvider settings={settings}>
-                        <WindowWrapper>
-                          {getLayout(<Component {...pageProps} />)}
-                          <ReactHotToast>
-                            <Toaster
-                              position={settings.toastPosition}
-                              gutter={8}
-                              containerStyle={{ zIndex: 9999 }}
-                              toastOptions={{ duration: 3000 }}
-                            />
-                          </ReactHotToast>
-                        </WindowWrapper>
-                      </CustomAppProvider>
-                    </Guard>
+                    <AuthConsumer>
+                      {({ user }) => {
+                        return (
+                          <Guard fallback={<FallbackSpinner />}>
+                            <CustomAppProvider settings={settings} user={user}>
+                              <WindowWrapper>
+                                {getLayout(<Component {...pageProps} />)}
+                                <ReactHotToast>
+                                  <Toaster
+                                    position={settings.toastPosition}
+                                    gutter={8}
+                                    containerStyle={{ zIndex: 9999 }}
+                                    toastOptions={{ duration: 3000 }}
+                                  />
+                                </ReactHotToast>
+                              </WindowWrapper>
+                            </CustomAppProvider>
+                          </Guard>
+                        );
+                      }}
+                    </AuthConsumer>
                   </AuthProvider>
                 );
               }}
