@@ -1,20 +1,31 @@
 import { Chip, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { compose } from "@reduxjs/toolkit";
-import { firestoreConnect } from "react-redux-firebase";
 
+import { formatCurr, formatPercent } from "@/utils/format-number";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import { useSelector } from "react-redux";
-import { formatCurr } from "@/utils/format-number";
 import { green, red } from "@mui/material/colors";
 import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
+import { memo } from "react";
 
-const StockList = () => {
+const StockList = ({ searchSymbols }) => {
   const stocks = useSelector((state) => state.firestore.data.dashboardStocks);
   const router = useRouter();
 
-  if (!stocks) return null;
+  if (!stocks || (searchSymbols && searchSymbols.length === 0))
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          mt: 2,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="body1">No stocks found</Typography>
+      </Box>
+    );
 
   const stocksArray = Object.values(stocks).map((stock) => ({
     ...stock,
@@ -83,7 +94,7 @@ const StockList = () => {
             fontWeight: 500,
           }}
         >
-          {stock.change > 0 ? "+" : "-"}
+          {stock.change > 0 ? "+" : ""}
           {formatCurr(stock.change)}
         </Typography>
       </Box>
@@ -120,26 +131,11 @@ const StockList = () => {
             fontWeight: 500,
           }}
         >
-          {stock.changePercent.toFixed(2)}%
+          {formatPercent(stock.changePercent)}
         </Typography>
       </Box>
     </Box>
   ));
 };
 
-export default compose(
-  firestoreConnect((props) => {
-    return [
-      {
-        collection: "stocks",
-        limit: 10,
-        orderBy: ["symbol"],
-        where: props.searchSymbols
-          ? ["symbol", "in", props.searchSymbols]
-          : null,
-        startAt: props.startAt?.symbol,
-        storeAs: "dashboardStocks",
-      },
-    ];
-  })
-)(StockList);
+export default memo(StockList);
