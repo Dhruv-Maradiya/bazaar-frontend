@@ -19,8 +19,8 @@ const Dashboard = ({
   setPage,
   search,
   setSearch,
-  searchDebounce,
   sortedAllStocks,
+  searchSymbols,
 }) => {
   return (
     <Box
@@ -52,11 +52,7 @@ const Dashboard = ({
               <StockList
                 pageNumber={page}
                 startAt={sortedAllStocks[(page - 1) * 10]}
-                searchSymbols={
-                  searchDebounce
-                    ? sortedAllStocks.map((stock) => stock.symbol)
-                    : undefined
-                }
+                searchSymbols={searchSymbols}
               />
               <Box
                 sx={{

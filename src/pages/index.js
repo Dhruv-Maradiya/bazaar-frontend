@@ -8,7 +8,6 @@ import useDebounce from "@/hooks/useDebounce";
 export default function StockDashboard() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
-  const [currentDate, setCurrentDate] = useState(new Date());
   const searchDebounce = useDebounce(search, 500);
 
   const allStocks = useSelector((state) => state.settings.stocks);
@@ -25,6 +24,8 @@ export default function StockDashboard() {
       return true;
     });
 
+  console.log(sortedAllStocks);
+
   return (
     <PageContainer title="" breadCrumbs={[]}>
       <Dashboard
@@ -34,7 +35,11 @@ export default function StockDashboard() {
         setSearch={setSearch}
         searchDebounce={searchDebounce}
         sortedAllStocks={sortedAllStocks}
-        currentDate={currentDate}
+        searchSymbols={
+          searchDebounce
+            ? sortedAllStocks.map((stock) => stock.symbol)
+            : undefined
+        }
       />
     </PageContainer>
   );
