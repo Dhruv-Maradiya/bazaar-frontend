@@ -1,165 +1,67 @@
-import { convertFirebaseTimestampToDate } from "@/utils/timestamp";
-import { useTheme } from "@mui/material/styles";
-import { Box } from "@mui/system";
-import { useCallback, useEffect, useMemo, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useRef, useEffect } from 'react';
+import { createChart } from 'lightweight-charts';
 
-const StockChart = () => {
-  const theme = useTheme();
-  const candles = useSelector((state) => state.firestore.ordered.candles);
-  const apexChart = useRef(null);
-  const chartRef = useRef(null);
-  const zoomRef = useRef(null);
-
-  const series = useMemo(() => {
-    if (!candles) return [];
-
-    return candles.map((candle) => ({
-      x: convertFirebaseTimestampToDate(candle.startAt),
-      y: [candle.open, candle.high, candle.low, candle.close],
-    }));
-  }, [candles]);
-
-  const options = useMemo(() => {
-    return {
-      chart: {
-        type: "candlestick",
-        height: 400,
-        background: "transparent",
-        toolbar: {
-          show: false,
-        },
-        animations: {
-          enabled: false,
-        },
-        events: {
-          beforeResetZoom: function () {
-            zoomRef.current = null;
-          },
-          zoomed: function (_, value) {
-            zoomRef.current = [value.xaxis.min, value.xaxis.max];
-          },
-        },
-        zoom: {
-          enabled: true,
-          type: "xy",
-        },
-      },
-      tooltip: {
-        enabled: true,
-        x: {
-          format: "dd MMM yyyy, HH:mm",
-        },
-      },
-      xaxis: {
-        type: "datetime",
-        labels: {
-          formatter: function (val) {
-            return new Date(val).toLocaleTimeString("en-US", {
-              hour: "numeric",
-              minute: "numeric",
-              hour12: true,
-            });
-          },
-        },
-      },
-      yaxis: {
-        tooltip: {
-          enabled: true,
-        },
-      },
-      grid: {
-        borderColor: theme.palette.divider,
-      },
-      theme: {
-        mode: theme.palette.mode,
-      },
-      plotOptions: {
-        candlestick: {
-          colors: {
-            upward: theme.palette.success.main,
-            downward: theme.palette.error.main,
-          },
-        },
-      },
-      series: [
-        {
-          data: [],
-        },
-      ],
-    };
-  }, [
-    theme.palette.divider,
-    theme.palette.error.main,
-    theme.palette.success.main,
-    theme.palette.mode,
-  ]);
+const StockChart = ({ candles }) => {
+  const chartContainer = useRef(null);
 
   useEffect(() => {
-    if (
-      typeof window !== "undefined" &&
-      chartRef.current &&
-      !apexChart.current
-    ) {
-      const ApexChartsConstructor = require("apexcharts");
-
-      apexChart.current = new ApexChartsConstructor(chartRef.current, options);
-      apexChart.current.render();
-    }
-  });
-
-  useEffect(() => {
-    const chart = apexChart.current;
-
-    if (chart) {
-      chart.updateOptions({
-        theme: {
-          mode: theme.palette.mode,
+    if (chartContainer.current) {
+      const chartOptions = {
+        layout: {
+          textColor: 'white',
+          background: {
+            type: 'solid',
+            color: 'white',
+          },
         },
-        grid: {
-          borderColor: theme.palette.divider,
-        },
-        series: [{ data: series }],
+        width: chartContainer.current.clientWidth,
+        height: chartContainer.current.clientHeight,
+      };
+
+      const chartRef = chartContainer.current;
+      const chart = createChart(chartRef, chartOptions);
+
+      const candlestickSeries = chart.addCandlestickSeries({
+        upColor: '#0A9981',
+        downColor: '#F23545',
+        borderVisible: false,
+        wickUpColor: '#0A9981',
+        wickDownColor: '#F23545',
       });
 
-      if (zoomRef.current) {
-        chart.zoomX(zoomRef.current[0], zoomRef.current[1]);
+      // Check if candles is not undefined or null
+      if (candles) {
+        // Map the candles data to the format required by lightweight-charts
+        const formattedCandles = Object.values(candles).map(candle => ({
+          time: candle.startAt.seconds, // Assuming startAt is a Firestore Timestamp
+          open: candle.open,
+          high: candle.high,
+          low: candle.low,
+          close: candle.close,
+        }));
+
+        // Sort the data by time in ascending order
+        formattedCandles.sort((a, b) => a.time - b.time);
+
+        // Set the data for the candlestick series
+        candlestickSeries.setData(formattedCandles);
+
+        chart.timeScale().fitContent();
       }
+
+      return () => chart.remove();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [options]);
-
-  useEffect(() => {
-    if (apexChart.current) {
-      const chart = apexChart.current;
-
-      chart.updateOptions(
-        {
-          series: [{ data: series }],
-        },
-        false,
-        false,
-        false
-      );
-
-      if (zoomRef.current) {
-        chart.zoomX(zoomRef.current[0], zoomRef.current[1]);
-      }
-    }
-  }, [series]);
-
-  if (!candles) return null;
+  }, [candles]);
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        height: "100%",
-      }}
+    <div
+      ref={chartContainer}
+      className='custom-cursor'
+      id='stock-chart'
+      style={{ width: '100%', height: '400px' }}
     >
-      <div ref={chartRef}></div>
-    </Box>
+    </div>
   );
-};
+}
 
 export default StockChart;

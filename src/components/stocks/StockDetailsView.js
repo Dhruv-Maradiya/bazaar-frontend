@@ -29,6 +29,7 @@ import { useSelector } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
 import Buy from "./actions/Buy";
 import Sell from "./actions/Sell";
+// import StockChartOld from "./StockChartOld";
 import StockChart from "./StockChart";
 
 const StyledLink = styled(Link)`
@@ -72,6 +73,7 @@ const StockDetailsView = ({ stockId }) => {
   const [sellOpen, setSellOpen] = useState(false);
   const [buyType, setBuyType] = useState("BUY");
   const [sellType, setSellType] = useState("SELL");
+
 
   const stock = useSelector((state) => state.firestore.data?.stocks?.[stockId]);
   const candles = useSelector((state) => state.firestore.data.candles);

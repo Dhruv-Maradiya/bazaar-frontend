@@ -28,6 +28,7 @@ import UserLayout from "@/layouts/UserLayout";
 import { createEmotionCache } from "@/utils/emotion-cache";
 import dynamic from "next/dynamic";
 import { ReactReduxFirebaseProvider } from "react-redux-firebase";
+import "../styles/globals.css";
 
 const clientSideEmotionCache = createEmotionCache();
 
