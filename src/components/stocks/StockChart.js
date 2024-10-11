@@ -13,6 +13,8 @@ const StockChart = ({ candles }) => {
       height: chartContainer.current.clientHeight,
     });
 
+    // candleSeires
+
     const candlestickSeries = chart.addCandlestickSeries({
       upColor: '#0A9981', downColor: '#F23545',
       wickUpColor: '#0A9981', wickDownColor: '#F23545',
