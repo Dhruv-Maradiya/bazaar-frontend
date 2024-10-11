@@ -24,8 +24,6 @@ export default function StockDashboard() {
       return true;
     });
 
-  console.log(sortedAllStocks);
-
   return (
     <PageContainer title="" breadCrumbs={[]}>
       <Dashboard
