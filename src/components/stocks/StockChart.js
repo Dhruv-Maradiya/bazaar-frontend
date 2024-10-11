@@ -14,6 +14,7 @@ const StockChart = ({ candles }) => {
     });
 
     const candlestickSeries = chart.addCandlestickSeries({
+      // color scheme as per trading view chart ~~ color codes
       upColor: '#0A9981', downColor: '#F23545',
       wickUpColor: '#0A9981', wickDownColor: '#F23545',
     });
