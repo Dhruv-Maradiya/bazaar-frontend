@@ -50,3 +50,23 @@ input[type="number"]::-webkit-outer-spin-button {
 .custom-cursor {
   cursor: crosshair;
 }
+
+.custom-tooltip {
+  position: absolute;
+  z-index: 999;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  display: none;
+  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.25);
+}
+
+.tooltip-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.tooltip-bold {
+  font-weight: bold;
+}

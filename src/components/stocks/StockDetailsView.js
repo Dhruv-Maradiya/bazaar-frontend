@@ -68,12 +68,11 @@ const Breadcrumbs = ({ currentPage }) => (
   </MuiBreadcrumbs>
 );
 
-const StockDetailsView = ({ stockId }) => {
+const StockDetailsView = ({ stockId, drawerRef }) => {
   const [buyOpen, setBuyOpen] = useState(false);
   const [sellOpen, setSellOpen] = useState(false);
   const [buyType, setBuyType] = useState("BUY");
   const [sellType, setSellType] = useState("SELL");
-
 
   const stock = useSelector((state) => state.firestore.data?.stocks?.[stockId]);
   const candles = useSelector((state) => state.firestore.data.candles);
@@ -172,7 +171,7 @@ const StockDetailsView = ({ stockId }) => {
                 alignItems: "center",
               }}
             >
-              <StockChart candles={candles} />
+              <StockChart candles={candles} drawerRef={drawerRef} />
             </Box>
             <Box
               sx={{

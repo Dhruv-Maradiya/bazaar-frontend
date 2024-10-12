@@ -1,5 +1,8 @@
 "use client";
 
+// ** React Imports
+import { useRef } from "react";
+
 // ** Next Imports
 import Head from "next/head";
 import { Router } from "next/router";
@@ -56,8 +59,11 @@ if (themeConfig.routingLoader) {
 function App(props) {
   const { Component, pageProps, emotionCache = clientSideEmotionCache } = props;
   const getLayout =
-    Component.getLayout ?? ((page) => <UserLayout>{page}</UserLayout>);
+    Component.getLayout ??
+    ((page) => <UserLayout drawerRef={drawerRef}>{page}</UserLayout>);
   const Guard = Component.guestGuard === true ? GuestGuard : AuthGuard;
+
+  const drawerRef = useRef(null);
 
   return (
     <Provider store={store}>
@@ -80,7 +86,12 @@ function App(props) {
                           <Guard fallback={<FallbackSpinner />}>
                             <CustomAppProvider settings={settings} user={user}>
                               <WindowWrapper>
-                                {getLayout(<Component {...pageProps} />)}
+                                {getLayout(
+                                  <Component
+                                    {...pageProps}
+                                    drawerRef={drawerRef}
+                                  />
+                                )}
                                 <ReactHotToast>
                                   <Toaster
                                     position={settings.toastPosition}
