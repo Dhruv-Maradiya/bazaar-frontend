@@ -8,7 +8,7 @@ import { useResizeDetector } from "react-resize-detector";
 
 const TOOLTIP_WIDTH = 80;
 const TOOLTIP_HEIGHT = 120;
-const TOOLTIP_MARGIN = 15;
+const TOOLTIP_MARGIN = 5;
 
 const tooltipContent = (open, high, low, close) => `
   <div class="tooltip-content">
@@ -90,10 +90,11 @@ const handleCrosshairMove = (
     );
 
     const coordinate = candlestickSeries.priceToCoordinate(price);
-    let shiftedCoordinate = param.point.x - 50;
     if (coordinate === null) {
       return;
     }
+
+    let shiftedCoordinate = param.point.x + 20;
     shiftedCoordinate = Math.max(
       0,
       Math.min(container.clientWidth - TOOLTIP_WIDTH, shiftedCoordinate)
@@ -201,7 +202,7 @@ const StockChart = ({ candles, drawerRef }) => {
       candlestickSeriesRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chartContainer, width, theme]);
+  }, [chartContainer, width]);
 
   useEffect(() => {
     if (chartRef.current) {
