@@ -1,8 +1,7 @@
 import { Box } from "@mui/system";
-import React, { memo } from "react";
-import TrendingStocks from "./TrendingStocks";
+import { memo } from "react";
 import StockDetailsView from "./StockDetailsView";
-
+import TrendingStocks from "./TrendingStocks";
 
 const StockView = ({ stockId, drawerRef }) => {
   return (
