@@ -204,7 +204,7 @@ const Buy = ({ stock, open, handleClose, type }) => {
               >
                 <Typography variant="body1">Current Total Balance:</Typography>
                 <Typography variant="body1">
-                  <strong>{formatCurr(portfolio.remaining)}</strong>
+                  <strong>{formatCurr(portfolio.available)}</strong>
                 </Typography>
               </Box>
 
@@ -247,7 +247,7 @@ const Buy = ({ stock, open, handleClose, type }) => {
             color="success"
             variant="contained"
             loadingPosition="start"
-            disabled={loading || portfolio.remaining < shares * stock.price}
+            disabled={loading || portfolio.available < shares * stock.price}
           >
             {loading ? (
               <CircularProgress

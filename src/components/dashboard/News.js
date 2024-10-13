@@ -34,39 +34,45 @@ const News = () => {
         gap: 2,
       }}
     >
-      {newsArray?.map((item) => (
-        <Card key={item.id}>
-          <CardContent>
-            <Box>
-              <Typography variant="h6">{item.title}</Typography>
-              <Typography variant="caption">
-                {moment(
-                  convertFirebaseTimestampToDate(item.releaseAt)
-                ).fromNow()}
-              </Typography>
-            </Box>
-            <Typography variant="body1">{item.description}</Typography>
-            {item.source && (
-              <Link
-                href={item.source}
-                target="_blank"
-                style={{ textDecoration: "none" }}
-              >
-                <Typography
-                  variant="caption"
-                  color="primary"
-                  sx={{
-                    cursor: "pointer",
-                    textDecoration: "none !important",
-                  }}
-                >
-                  View Sources
+      {newsArray
+        ?.sort((a, b) => {
+          const aDate = convertFirebaseTimestampToDate(a.releaseAt);
+          const bDate = convertFirebaseTimestampToDate(b.releaseAt);
+          return bDate - aDate;
+        })
+        ?.map((item) => (
+          <Card key={item.id}>
+            <CardContent>
+              <Box>
+                <Typography variant="h6">{item.title}</Typography>
+                <Typography variant="caption">
+                  {moment(
+                    convertFirebaseTimestampToDate(item.releaseAt)
+                  ).fromNow()}
                 </Typography>
-              </Link>
-            )}
-          </CardContent>
-        </Card>
-      ))}
+              </Box>
+              <Typography variant="body1">{item.description}</Typography>
+              {item.source && (
+                <Link
+                  href={item.source}
+                  target="_blank"
+                  style={{ textDecoration: "none" }}
+                >
+                  <Typography
+                    variant="caption"
+                    color="primary"
+                    sx={{
+                      cursor: "pointer",
+                      textDecoration: "none !important",
+                    }}
+                  >
+                    View Sources
+                  </Typography>
+                </Link>
+              )}
+            </CardContent>
+          </Card>
+        ))}
     </Box>
   );
 };

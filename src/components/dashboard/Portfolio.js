@@ -1,3 +1,8 @@
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
+import moment from "moment";
+import firebase from "firebase/compat/app";
 import { db as firestore } from "@/lib/firebase/init";
 import { formatCurr, formatPercent } from "@/utils/format-number";
 import {
@@ -5,7 +10,6 @@ import {
   TransactionTypeMap,
   TransactionTypeMapBuyMap,
 } from "@/utils/timestamp";
-import { Edit, ExpandLess, ExpandMore } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -20,12 +24,46 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import firebase from "firebase/compat/app";
-import moment from "moment";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
+// Styles
+const styles = {
+  symbolBadge: {
+    backgroundColor: "#76b82a",
+    color: "white",
+    padding: "2px 8px",
+    borderRadius: "4px",
+    marginRight: "8px",
+  },
+  gainText: (gain) => ({
+    color: gain >= 0 ? "success.main" : "error.main",
+  }),
+  portfolioIcon: {
+    width: 40,
+    height: 40,
+    backgroundColor: "#e8f0fe",
+    borderRadius: 1,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 2,
+  },
+};
+
+// Helper Components
+const SymbolBadge = ({ symbol }) => (
+  <Box component="span" sx={styles.symbolBadge}>
+    {symbol}
+  </Box>
+);
+
+const GainText = ({ gain, children }) => (
+  <Typography component="span" sx={styles.gainText(gain)}>
+    {children}
+  </Typography>
+);
+
+// Main Components
 const StockRow = ({
   portfolioStock,
   expanded,
@@ -33,17 +71,9 @@ const StockRow = ({
   stockData,
   transactions,
 }) => {
-  let gain =
-    (stockData?.price - portfolioStock?.price || 0) *
-    (portfolioStock?.shares || 0);
-  let gainInPercent = (stockData?.price * 100) / portfolioStock?.price - 100;
-
-  if (portfolioStock.type === "SHORT SELL") {
-    gain = -gain;
-    gainInPercent = -gainInPercent;
-  }
-
   const router = useRouter();
+  const gain = calculateGain(portfolioStock, stockData);
+  const gainInPercent = calculateGainPercent(portfolioStock, stockData);
 
   return (
     <>
@@ -52,49 +82,25 @@ const StockRow = ({
           <Box
             display="flex"
             alignItems="center"
-            sx={{
-              cursor: "pointer",
-            }}
+            sx={{ cursor: "pointer" }}
             onClick={() => router.push(`/stocks/${portfolioStock.stock.id}`)}
           >
-            <Box
-              component="span"
-              sx={{
-                backgroundColor:
-                  portfolioStock.symbol === "AAPL" ? "#6e6e6e" : "#76b82a",
-                color: "white",
-                padding: "2px 8px",
-                borderRadius: "4px",
-                marginRight: "8px",
-              }}
-            >
-              {stockData?.symbol}
-            </Box>
+            <SymbolBadge symbol={stockData?.symbol} />
             {stockData?.name}
           </Box>
         </TableCell>
+        <TableCell align="right">{formatCurr(portfolioStock?.price)}</TableCell>
         <TableCell align="right">{formatCurr(stockData?.price)}</TableCell>
+        <TableCell align="right">{portfolioStock.shares}</TableCell>
         <TableCell align="right">
-          {portfolioStock.shares}
-          {portfolioStock.symbol === "NVDA" && (
-            <Edit
-              fontSize="small"
-              sx={{ marginLeft: "4px", color: "action.active" }}
-            />
-          )}
-        </TableCell>
-        <TableCell
-          align="right"
-          sx={{
-            color: gain >= 0 ? "success.main" : "error.main",
-          }}
-        >
-          <Typography component="span" mr={1}>
-            {formatCurr(gain)}
-          </Typography>
-          <Typography component="span">
-            {gainInPercent >= 0 ? "▲" : "▼"} {formatPercent(gainInPercent)}
-          </Typography>
+          <GainText gain={gain}>
+            <Typography component="span" mr={1}>
+              {formatCurr(gain)}
+            </Typography>
+            <Typography component="span">
+              {gainInPercent >= 0 ? "▲" : "▼"} {formatPercent(gainInPercent)}
+            </Typography>
+          </GainText>
         </TableCell>
         <TableCell align="right">
           {formatCurr(portfolioStock.shares * (stockData?.price || 0))}
@@ -108,145 +114,111 @@ const StockRow = ({
           {TransactionTypeMap[portfolioStock.type]}
         </TableCell>
       </TableRow>
-      {expanded && (
-        <TableRow>
-          <TableCell colSpan={6} sx={{ paddingBottom: 0, paddingTop: 0 }}>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell>PURCHASE DATE</TableCell>
-                  <TableCell align="right">PURCHASE PRICE</TableCell>
-                  <TableCell align="right">QUANTITY</TableCell>
-                  <TableCell align="right">P/L</TableCell>
-                  <TableCell align="right">VALUE</TableCell>
-                  <TableCell />
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {transactions.map((purchase, index) => (
-                  <TableRow key={index}>
-                    <TableCell>
-                      {moment(
-                        convertFirebaseTimestampToDate(purchase.createdAt)
-                      ).format("DD MMM YYYY, hh:mm A")}
-                    </TableCell>
-                    <TableCell align="right">
-                      {formatCurr(purchase.price)}
-                    </TableCell>
-                    <TableCell align="right">{purchase.quantity}</TableCell>
-                    <TableCell
-                      align="right"
-                      sx={{
-                        color:
-                          purchase.profitLoss >= 0
-                            ? "success.main"
-                            : "error.main",
-                      }}
-                    >
-                      {purchase.profitLoss !== null ? (
-                        <>{formatCurr(purchase.profitLoss)}</>
-                      ) : (
-                        "-"
-                      )}
-                    </TableCell>
-                    <TableCell align="right">
-                      {formatCurr(purchase.quantity * purchase.price)}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableCell>
-        </TableRow>
-      )}
+      {expanded && <TransactionDetails transactions={transactions} />}
     </>
   );
 };
+
+const TransactionDetails = ({ transactions }) => (
+  <TableRow>
+    <TableCell colSpan={6} sx={{ paddingBottom: 0, paddingTop: 0 }}>
+      <Table size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell>PURCHASE DATE</TableCell>
+            <TableCell align="right">PURCHASE PRICE</TableCell>
+            <TableCell align="right">QUANTITY</TableCell>
+            <TableCell align="right">P/L</TableCell>
+            <TableCell align="right">VALUE</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {transactions.map((purchase, index) => (
+            <TransactionRow key={index} purchase={purchase} />
+          ))}
+        </TableBody>
+      </Table>
+    </TableCell>
+  </TableRow>
+);
+
+const TransactionRow = ({ purchase }) => (
+  <TableRow>
+    <TableCell>
+      {moment(convertFirebaseTimestampToDate(purchase.createdAt)).format(
+        "DD MMM YYYY, hh:mm A"
+      )}
+    </TableCell>
+    <TableCell align="right">{formatCurr(purchase.price)}</TableCell>
+    <TableCell align="right">{purchase.quantity}</TableCell>
+    <TableCell align="right" sx={styles.gainText(purchase.profitLoss)}>
+      {purchase.profitLoss !== null ? formatCurr(purchase.profitLoss) : "-"}
+    </TableCell>
+    <TableCell align="right">
+      {formatCurr(purchase.quantity * purchase.price)}
+    </TableCell>
+  </TableRow>
+);
 
 const PortfolioDetails = ({ portfolio, open, onClose }) => {
   const [expandedStock, setExpandedStock] = useState([]);
   const [portfolioStocks, setPortfolioStocks] = useState([]);
   const [transactions, setTransactions] = useState([]);
 
-  const handleClose = () => {
-    onClose();
-  };
-
   useEffect(() => {
     if (!portfolio || !open) return;
-    const fetchStockData = async () => {
-      const [stocks, transactions] = await Promise.all([
-        firestore
-          .collection("stocks")
-          .where(
-            firebase.firestore.FieldPath.documentId(),
-            "in",
-            portfolio.data.map((stock) => stock.stock.id)
-          )
-          .get(),
-        firestore
-          .collection("users")
-          .doc(portfolio.id)
-          .collection("transactions")
-          .get(),
-      ]);
-
-      const data = stocks.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-      const transactionData = transactions.docs.map((doc) => doc.data());
-      setPortfolioStocks(data);
-      setTransactions(transactionData);
-    };
-
-    fetchStockData();
+    fetchPortfolioData(portfolio, setPortfolioStocks, setTransactions);
   }, [portfolio, open]);
 
-  if (!portfolio) return null;
+  if (!portfolio || !portfolio.data || portfolio.data.length === 0) {
+    return (
+      <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
+        <DialogTitle>Portfolio Details</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">No stocks in your portfolio</Typography>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   return (
-    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="lg">
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
       <DialogTitle>Portfolio Details</DialogTitle>
       <DialogContent>
         <Table>
           <TableHead>
             <TableRow>
               <TableCell>SYMBOL NAME</TableCell>
+              <TableCell align="right">PURCHASE PRICE</TableCell>
               <TableCell align="right">PRICE</TableCell>
               <TableCell align="right">QUANTITY</TableCell>
               <TableCell align="right">GAIN</TableCell>
               <TableCell align="right">VALUE</TableCell>
               <TableCell align="right">TYPE</TableCell>
-
               <TableCell padding="none" />
             </TableRow>
           </TableHead>
           <TableBody>
-            {portfolio.data.map((portfolioStock) => {
-              const rowId = portfolioStock.stock.id + portfolioStock.type;
-              return (
-                <StockRow
-                  key={rowId}
-                  portfolioStock={portfolioStock}
-                  expanded={expandedStock.includes(rowId)}
-                  onToggle={() =>
-                    setExpandedStock((prev) =>
-                      prev.includes(rowId)
-                        ? prev.filter((id) => id !== rowId)
-                        : [...prev, rowId]
-                    )
-                  }
-                  stockData={portfolioStocks.find(
-                    (s) => s.id === portfolioStock.stock.id
-                  )}
-                  transactions={transactions.filter(
-                    (t) =>
-                      t.stock.id === portfolioStock.stock.id &&
-                      TransactionTypeMapBuyMap[portfolioStock.type].includes(
-                        t.type
-                      )
-                  )}
-                />
-              );
-            })}
+            {portfolio.data.map((portfolioStock) => (
+              <StockRow
+                key={`${portfolioStock.stock.id}-${portfolioStock.type}`}
+                portfolioStock={portfolioStock}
+                expanded={expandedStock.includes(
+                  `${portfolioStock.stock.id}-${portfolioStock.type}`
+                )}
+                onToggle={() =>
+                  toggleStockExpansion(
+                    portfolioStock,
+                    expandedStock,
+                    setExpandedStock
+                  )
+                }
+                stockData={portfolioStocks.find(
+                  (s) => s.id === portfolioStock.stock.id
+                )}
+                transactions={filterTransactions(transactions, portfolioStock)}
+              />
+            ))}
           </TableBody>
         </Table>
       </DialogContent>
@@ -254,24 +226,52 @@ const PortfolioDetails = ({ portfolio, open, onClose }) => {
   );
 };
 
+const PortfolioSummary = ({ portfolio }) => (
+  <Box
+    sx={{
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      mb: 2,
+      flexDirection: "column",
+    }}
+  >
+    {["Invested", "Available", "Realized P/L", "Unrealized P/L"].map(
+      (label) => (
+        <SummaryRow
+          key={label}
+          label={label}
+          value={portfolio?.[label.toLowerCase().replace(" p/l", "")]}
+        />
+      )
+    )}
+  </Box>
+);
+
+const SummaryRow = ({ label, value }) => (
+  <Box
+    sx={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      width: "100%",
+    }}
+  >
+    <Typography variant="body1">{label}:</Typography>
+    <Typography variant="body1" sx={{ fontWeight: 600 }}>
+      {formatCurr(value)}
+    </Typography>
+  </Box>
+);
+
 const Portfolio = () => {
   const [openPortfolioDetails, setOpenPortfolioDetails] = useState(false);
   const portfolio = useSelector((state) => state.firestore.data.firestoreUser);
+
   return (
     <>
       <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-        <Box
-          sx={{
-            width: 40,
-            height: 40,
-            backgroundColor: "#e8f0fe",
-            borderRadius: 1,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            mr: 2,
-          }}
-        >
+        <Box sx={styles.portfolioIcon}>
           <Typography variant="h6" sx={{ color: "#4285f4" }}>
             ₹
           </Typography>
@@ -286,52 +286,7 @@ const Portfolio = () => {
       <Typography variant="h4" gutterBottom>
         {formatCurr(portfolio?.total)}
       </Typography>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          mb: 2,
-          flexDirection: "column",
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            width: "100%",
-          }}
-        >
-          <Typography variant="body1">Invested:</Typography>
-          <Typography
-            variant="body1"
-            sx={{
-              fontWeight: 600,
-            }}
-          >
-            {formatCurr(portfolio?.invested)}
-          </Typography>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            width: "100%",
-          }}
-        >
-          <Typography variant="body1">Remaining:</Typography>
-          <Typography
-            variant="body1"
-            sx={{
-              fontWeight: 600,
-            }}
-          >
-            {formatCurr(portfolio?.remaining)}
-          </Typography>
-        </Box>
-      </Box>
+      <PortfolioSummary portfolio={portfolio} />
       <Button
         fullWidth
         variant="outlined"
@@ -347,5 +302,67 @@ const Portfolio = () => {
     </>
   );
 };
+
+// Helper functions
+const calculateGain = (portfolioStock, stockData) => {
+  let gain =
+    (stockData?.price - portfolioStock?.price || 0) *
+    (portfolioStock?.shares || 0);
+  return portfolioStock.type === "SHORT SELL" ? -gain : gain;
+};
+
+const calculateGainPercent = (portfolioStock, stockData) => {
+  let gainInPercent = (stockData?.price * 100) / portfolioStock?.price - 100;
+  return portfolioStock.type === "SHORT SELL" ? -gainInPercent : gainInPercent;
+};
+
+const fetchPortfolioData = async (
+  portfolio,
+  setPortfolioStocks,
+  setTransactions
+) => {
+  if (!portfolio.data || portfolio.data.length === 0) {
+    setPortfolioStocks([]);
+    setTransactions([]);
+    return;
+  }
+
+  const [stocks, transactions] = await Promise.all([
+    firestore
+      .collection("stocks")
+      .where(
+        firebase.firestore.FieldPath.documentId(),
+        "in",
+        portfolio.data.map((stock) => stock.stock.id)
+      )
+      .get(),
+    firestore
+      .collection("users")
+      .doc(portfolio.id)
+      .collection("transactions")
+      .get(),
+  ]);
+
+  setPortfolioStocks(stocks.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  setTransactions(transactions.docs.map((doc) => doc.data()));
+};
+
+const toggleStockExpansion = (
+  portfolioStock,
+  expandedStock,
+  setExpandedStock
+) => {
+  const rowId = `${portfolioStock.stock.id}-${portfolioStock.type}`;
+  setExpandedStock((prev) =>
+    prev.includes(rowId) ? prev.filter((id) => id !== rowId) : [...prev, rowId]
+  );
+};
+
+const filterTransactions = (transactions, portfolioStock) =>
+  transactions.filter(
+    (t) =>
+      t.stock.id === portfolioStock.stock.id &&
+      TransactionTypeMapBuyMap[portfolioStock.type].includes(t.type)
+  );
 
 export default Portfolio;
