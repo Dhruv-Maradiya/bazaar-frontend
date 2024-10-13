@@ -29,6 +29,7 @@ import { useSelector } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
 import Buy from "./actions/Buy";
 import Sell from "./actions/Sell";
+// import StockChartOld from "./StockChartOld";
 import StockChart from "./StockChart";
 
 const StyledLink = styled(Link)`
@@ -67,7 +68,7 @@ const Breadcrumbs = ({ currentPage }) => (
   </MuiBreadcrumbs>
 );
 
-const StockDetailsView = ({ stockId }) => {
+const StockDetailsView = ({ stockId, drawerRef }) => {
   const [buyOpen, setBuyOpen] = useState(false);
   const [sellOpen, setSellOpen] = useState(false);
   const [buyType, setBuyType] = useState("BUY");
@@ -170,7 +171,7 @@ const StockDetailsView = ({ stockId }) => {
                 alignItems: "center",
               }}
             >
-              <StockChart candles={candles} />
+              <StockChart candles={candles} drawerRef={drawerRef} />
             </Box>
             <Box
               sx={{

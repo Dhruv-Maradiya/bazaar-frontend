@@ -53,9 +53,9 @@ export const buyStock = createAsyncThunk(
 
       await db.runTransaction(async (transaction) => {
         transaction.update(db.collection("users").doc(userId), {
-          remaining: firebase.firestore.FieldValue.increment(-price * shares),
-          data: newData,
+          available: firebase.firestore.FieldValue.increment(-price * shares),
           invested: firebase.firestore.FieldValue.increment(price * shares),
+          data: newData,
         });
 
         // Add new transaction to subcollection transaction of users
@@ -100,7 +100,6 @@ export const sellStock = createAsyncThunk(
 
       if (!currentHoldings) {
         toast.error("Something went wrong!");
-
         return;
       }
 
@@ -126,11 +125,13 @@ export const sellStock = createAsyncThunk(
       await db.runTransaction(async (transaction) => {
         // Update portfolio
         transaction.update(db.collection("users").doc(userId), {
-          remaining: firebase.firestore.FieldValue.increment(price * shares),
           data: newData,
+          available: firebase.firestore.FieldValue.increment(price * shares),
           invested: firebase.firestore.FieldValue.increment(
             currentHoldings.price * shares * -1
           ),
+          realized: firebase.firestore.FieldValue.increment(profitOrLoss),
+          unrealized: firebase.firestore.FieldValue.increment(-profitOrLoss),
           total: firebase.firestore.FieldValue.increment(profitOrLoss),
         });
 

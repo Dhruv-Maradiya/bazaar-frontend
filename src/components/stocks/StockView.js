@@ -3,7 +3,8 @@ import React, { memo } from "react";
 import TrendingStocks from "./TrendingStocks";
 import StockDetailsView from "./StockDetailsView";
 
-const StockView = ({ stockId }) => {
+
+const StockView = ({ stockId, drawerRef }) => {
   return (
     <Box
       sx={{
@@ -16,7 +17,7 @@ const StockView = ({ stockId }) => {
       }}
     >
       <TrendingStocks stockId={stockId} />
-      <StockDetailsView stockId={stockId} />
+      <StockDetailsView stockId={stockId} drawerRef={drawerRef} />
     </Box>
   );
 };

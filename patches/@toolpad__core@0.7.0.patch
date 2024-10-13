@@ -1,0 +1,20 @@
+diff --git a/DashboardLayout/DashboardLayout.js b/DashboardLayout/DashboardLayout.js
+index f1e93e66665d349ce5a98fd200baae41f9198014..c5fc5b66163aa808ab9b58a9cd48eacf9e26a04f 100644
+--- a/DashboardLayout/DashboardLayout.js
++++ b/DashboardLayout/DashboardLayout.js
+@@ -466,6 +466,7 @@ function DashboardLayout(props) {
+         },
+         ...getDrawerSharedSx(isMobileMini)
+       },
++      ref: props.drawerRef,
+       children: getDrawerContent(isMobileMini, 'Tablet')
+     }), /*#__PURE__*/_jsx(Drawer, {
+       variant: "permanent",
+@@ -476,6 +477,7 @@ function DashboardLayout(props) {
+         },
+         ...getDrawerSharedSx(isDesktopMini)
+       },
++      ref: props.drawerRef,
+       children: getDrawerContent(isDesktopMini, 'Desktop')
+     }), /*#__PURE__*/_jsxs(Box, {
+       component: "main",
