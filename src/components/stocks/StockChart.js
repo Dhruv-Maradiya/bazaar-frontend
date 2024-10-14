@@ -114,12 +114,13 @@ const handleCrosshairMove = (
   }
 };
 
-const StockChart = ({ candles, drawerRef }) => {
+const StockChart = ({ candles, drawerRef, stockId }) => {
   const theme = useTheme();
   const chartContainer = useRef(null);
   const chartRef = useRef(null);
   const candlestickSeriesRef = useRef(null);
   const oldCandles = useRef(null);
+  const oldStockId = useRef(stockId);
   const tooltipRef = useRef(null);
 
   const { width } = useResizeDetector({
@@ -137,11 +138,11 @@ const StockChart = ({ candles, drawerRef }) => {
         candles,
         chartRef,
         candlestickSeriesRef,
-        !Boolean(oldCandles.current)
+        !Boolean(oldCandles.current?.length) || oldStockId.current !== stockId
       );
       oldCandles.current = candles;
     }
-  }, [candles]);
+  }, [candles, stockId]);
 
   useEffect(() => {
     if (!chartContainer.current) return;
@@ -235,6 +236,12 @@ const StockChart = ({ candles, drawerRef }) => {
     theme.palette.divider,
     theme.palette.text.primary,
   ]);
+
+  useEffect(() => {
+    if (oldStockId.current !== stockId) {
+      oldStockId.current = stockId;
+    }
+  }, [stockId]);
 
   return (
     <div

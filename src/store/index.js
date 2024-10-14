@@ -7,6 +7,7 @@ import { createFirestoreInstance, firestoreReducer } from "redux-firestore";
 
 // ** Reducers
 import settings from "@/store/settings/user";
+import candles from "@/store/candles";
 import { firebaseReducer } from "react-redux-firebase";
 
 const rrfConfig = {
@@ -15,6 +16,7 @@ const rrfConfig = {
 
 const combinedReducer = combineReducers({
   settings: settings,
+  candles: candles,
   firebase: firebaseReducer,
   firestore: firestoreReducer,
 });

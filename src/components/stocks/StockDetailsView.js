@@ -22,14 +22,17 @@ import {
 import { green, red } from "@mui/material/colors";
 import { styled } from "@mui/material/styles";
 import { Box, Stack } from "@mui/system";
-import { compose } from "@reduxjs/toolkit";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { firestoreConnect } from "react-redux-firebase";
 import Buy from "./actions/Buy";
 import Sell from "./actions/Sell";
 // import StockChartOld from "./StockChartOld";
+import { addCandles, removeCandles, updateCandles } from "@/store/candles";
+import { convertFirebaseTimestampToDate } from "@/utils/timestamp";
+import { compose } from "@reduxjs/toolkit";
+import { useDispatch } from "react-redux";
+import { firestoreConnect, useFirestore } from "react-redux-firebase";
 import StockChart from "./StockChart";
 
 const StyledLink = styled(Link)`
@@ -75,7 +78,14 @@ const StockDetailsView = ({ stockId, drawerRef }) => {
   const [sellType, setSellType] = useState("SELL");
 
   const stock = useSelector((state) => state.firestore.data?.stocks?.[stockId]);
-  const candles = useSelector((state) => state.firestore.data.candles);
+  const candlesDictionary = useSelector(
+    (state) => state.candles[stockId] || []
+  );
+  const candles = Object.values(candlesDictionary);
+
+  const dispatch = useDispatch();
+
+  const firestore = useFirestore();
 
   const { changeInPercentage, changeInValue } = useMemo(() => {
     if (!stock) return {};
@@ -85,6 +95,67 @@ const StockDetailsView = ({ stockId, drawerRef }) => {
       changeInValue: calculateChangeInValue(stock.open, stock.price),
     };
   }, [stock]);
+
+  useEffect(() => {
+    const lastCandle = candles?.sort(
+      (a, b) => b.startAt.seconds - a.startAt.seconds
+    )[0];
+
+    const candlesRef = firestore
+      .collection("stocks")
+      .doc(stockId)
+      .collection("candles");
+
+    let query = candlesRef;
+
+    if (lastCandle) {
+      query = query.where(
+        "startAt",
+        ">",
+        convertFirebaseTimestampToDate(lastCandle.startAt)
+      );
+    }
+
+    const unsubscribe = query.onSnapshot((snapshot) => {
+      const addedCandles = [];
+      const modifiedCandles = [];
+      const removedCandles = [];
+
+      snapshot.docChanges().forEach((change) => {
+        const candle = change.doc.data();
+        if (change.type === "added") {
+          addedCandles.push({
+            ...candle,
+            id: change.doc.id,
+          });
+        }
+        if (change.type === "modified") {
+          modifiedCandles.push({
+            ...candle,
+            id: change.doc.id,
+          });
+        }
+        if (change.type === "removed") {
+          removedCandles.push(change.doc.id);
+        }
+      });
+
+      if (addedCandles.length) {
+        dispatch(addCandles({ stockId, candles: addedCandles }));
+      }
+
+      if (modifiedCandles.length) {
+        dispatch(updateCandles({ stockId, candles: modifiedCandles }));
+      }
+
+      if (removedCandles.length) {
+        dispatch(removeCandles({ stockId, candleIds: removedCandles }));
+      }
+    });
+
+    return () => unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [firestore, stockId]);
 
   if (!stock) return null;
 
@@ -171,7 +242,11 @@ const StockDetailsView = ({ stockId, drawerRef }) => {
                 alignItems: "center",
               }}
             >
-              <StockChart candles={candles} drawerRef={drawerRef} />
+              <StockChart
+                candles={candles}
+                drawerRef={drawerRef}
+                stockId={stockId}
+              />
             </Box>
             <Box
               sx={{
@@ -255,14 +330,6 @@ const StockDetailsView = ({ stockId, drawerRef }) => {
 
 export default compose(
   firestoreConnect((props) => {
-    return [
-      { collection: "stocks", doc: props.stockId },
-      {
-        collection: "stocks",
-        doc: props.stockId,
-        subcollections: [{ collection: "candles" }],
-        storeAs: "candles",
-      },
-    ];
+    return [{ collection: "stocks", doc: props.stockId }];
   })
 )(StockDetailsView);
