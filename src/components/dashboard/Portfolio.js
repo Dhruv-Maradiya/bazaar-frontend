@@ -1,8 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
-import moment from "moment";
-import firebase from "firebase/compat/app";
+import ApexCharts from "@/@core/components/react-apexcharts";
 import { db as firestore } from "@/lib/firebase/init";
 import { formatCurr, formatPercent } from "@/utils/format-number";
 import {
@@ -10,6 +6,8 @@ import {
   TransactionTypeMap,
   TransactionTypeMapBuyMap,
 } from "@/utils/timestamp";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 import {
   Box,
   Button,
@@ -20,13 +18,17 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TableRow,
   Typography,
 } from "@mui/material";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
-
+import { useTheme } from "@mui/material/styles";
+import firebase from "firebase/compat/app";
+import moment from "moment";
+import { useRouter } from "next/router";
+import { useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 
 // Styles
 const styles = {
@@ -38,7 +40,7 @@ const styles = {
     marginRight: "8px",
   },
   gainText: (gain) => ({
-    color: gain >= 0 ? "success.main" : "error.main",
+    color: gain > 0 ? "success.main" : gain < 0 ? "error.main" : "text.primary",
   }),
   portfolioIcon: {
     width: 40,
@@ -91,10 +93,10 @@ const StockRow = ({
             {stockData?.name}
           </Box>
         </TableCell>
-        <TableCell align="right">{formatCurr(portfolioStock?.price)}</TableCell>
-        <TableCell align="right">{formatCurr(stockData?.price)}</TableCell>
-        <TableCell align="right">{portfolioStock.shares}</TableCell>
-        <TableCell align="right">
+        <TableCell>{formatCurr(portfolioStock?.price)}</TableCell>
+        <TableCell>{formatCurr(stockData?.price)}</TableCell>
+        <TableCell>{portfolioStock.shares}</TableCell>
+        <TableCell>
           <GainText gain={gain}>
             <Typography component="span" mr={1}>
               {formatCurr(gain)}
@@ -104,16 +106,15 @@ const StockRow = ({
             </Typography>
           </GainText>
         </TableCell>
-        <TableCell align="right">
+        <TableCell>
           {formatCurr(portfolioStock.shares * (stockData?.price || 0))}
         </TableCell>
-        <TableCell padding="none">
+
+        <TableCell>{TransactionTypeMap[portfolioStock.type]}</TableCell>
+        <TableCell>
           <IconButton onClick={onToggle} size="small">
             {expanded ? <ExpandLess /> : <ExpandMore />}
           </IconButton>
-        </TableCell>
-        <TableCell padding="none">
-          {TransactionTypeMap[portfolioStock.type]}
         </TableCell>
       </TableRow>
       {expanded && <TransactionDetails transactions={transactions} />}
@@ -122,7 +123,11 @@ const StockRow = ({
 };
 
 const TransactionDetails = ({ transactions }) => (
-  <TableRow>
+  <TableRow
+    sx={{
+      borderBottom: "none",
+    }}
+  >
     <TableCell colSpan={6} sx={{ paddingBottom: 0, paddingTop: 0 }}>
       <Table size="small">
         <TableHead>
@@ -162,6 +167,68 @@ const TransactionRow = ({ purchase }) => (
   </TableRow>
 );
 
+const PortfolioChart = ({ history }) => {
+  const theme = useTheme();
+
+  const series = useMemo(() => {
+    return history.map((h) => [h.date.toDate().getTime(), h.value]);
+  }, [history]);
+
+  const options = useMemo(() => {
+    return {
+      chart: {
+        toolbar: {
+          show: false,
+        },
+        background: "transparent",
+      },
+      theme: {
+        mode: theme.palette.mode,
+      },
+      xaxis: {
+        type: "datetime",
+      },
+      yaxis: {
+        labels: {
+          formatter: (value) => formatCurr(value),
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        curve: "smooth",
+      },
+      colors: [theme.palette.primary.main],
+      tooltip: {
+        x: {
+          format: "HH:mm:ss",
+        },
+      },
+    };
+  }, [theme.palette.mode, theme.palette.primary.main]);
+
+  return (
+    <Box
+      sx={{
+        maxHeight: 300,
+      }}
+    >
+      <ApexCharts
+        type="area"
+        series={[
+          {
+            data: series,
+            name: "Portfolio Value",
+          },
+        ]}
+        options={options}
+        height={300}
+      />
+    </Box>
+  );
+};
+
 const PortfolioDetails = ({ portfolio, open, onClose }) => {
   const [expandedStock, setExpandedStock] = useState([]);
   const [portfolioStocks, setPortfolioStocks] = useState([]);
@@ -184,45 +251,64 @@ const PortfolioDetails = ({ portfolio, open, onClose }) => {
   }
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl">
       <DialogTitle>Portfolio Details</DialogTitle>
-      <DialogContent>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>SYMBOL NAME</TableCell>
-              <TableCell align="right">PURCHASE PRICE</TableCell>
-              <TableCell align="right">PRICE</TableCell>
-              <TableCell align="right">QUANTITY</TableCell>
-              <TableCell align="right">GAIN</TableCell>
-              <TableCell align="right">VALUE</TableCell>
-              <TableCell align="right">TYPE</TableCell>
-              <TableCell padding="none" />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {portfolio.data.map((portfolioStock) => (
-              <StockRow
-                key={`${portfolioStock.stock.id}-${portfolioStock.type}`}
-                portfolioStock={portfolioStock}
-                expanded={expandedStock.includes(
-                  `${portfolioStock.stock.id}-${portfolioStock.type}`
-                )}
-                onToggle={() =>
-                  toggleStockExpansion(
-                    portfolioStock,
-                    expandedStock,
-                    setExpandedStock
-                  )
-                }
-                stockData={portfolioStocks.find(
-                  (s) => s.id === portfolioStock.stock.id
-                )}
-                transactions={filterTransactions(transactions, portfolioStock)}
-              />
-            ))}
-          </TableBody>
-        </Table>
+      <DialogContent
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+        }}
+      >
+        <PortfolioChart history={portfolio?.history || []} />
+        <TableContainer
+          sx={{
+            overflowX: "auto",
+            // Hide scrollbar
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
+            msOverflowStyle: "none",
+            scrollbarWidth: "none",
+            p: 2,
+          }}
+        >
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>SYMBOL NAME</TableCell>
+                <TableCell>PURCHASE PRICE</TableCell>
+                <TableCell>PRICE</TableCell>
+                <TableCell>QUANTITY</TableCell>
+                <TableCell>GAIN</TableCell>
+                <TableCell>VALUE</TableCell>
+                <TableCell>TYPE</TableCell>
+                <TableCell padding="none"></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {portfolio.data.map((portfolioStock) => (
+                <StockRow
+                  key={`${portfolioStock.stock.id}-${portfolioStock.type}`}
+                  portfolioStock={portfolioStock}
+                  expanded={expandedStock.includes(
+                    `${portfolioStock.stock.id}-${portfolioStock.type}`
+                  )}
+                  onToggle={() =>
+                    toggleStockExpansion(portfolioStock, setExpandedStock)
+                  }
+                  stockData={portfolioStocks.find(
+                    (s) => s.id === portfolioStock.stock.id
+                  )}
+                  transactions={filterTransactions(
+                    transactions,
+                    portfolioStock
+                  )}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </DialogContent>
     </Dialog>
   );
@@ -349,11 +435,7 @@ const fetchPortfolioData = async (
   setTransactions(transactions.docs.map((doc) => doc.data()));
 };
 
-const toggleStockExpansion = (
-  portfolioStock,
-  expandedStock,
-  setExpandedStock
-) => {
+const toggleStockExpansion = (portfolioStock, setExpandedStock) => {
   const rowId = `${portfolioStock.stock.id}-${portfolioStock.type}`;
   setExpandedStock((prev) =>
     prev.includes(rowId) ? prev.filter((id) => id !== rowId) : [...prev, rowId]
