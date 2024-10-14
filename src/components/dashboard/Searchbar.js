@@ -47,6 +47,10 @@ const Searchbar = ({ value: search, onChange: setSearch }) => {
           borderColor: "transparent",
           border: "none",
         },
+        "@media (max-width:600px)": {
+          maxWidth: 350,
+          margin: "0 20px", 
+        },
       }}
       value={search}
       onChange={(e) => setSearch(e.target.value)}
