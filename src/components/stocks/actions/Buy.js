@@ -19,10 +19,10 @@ import {
   Button,
   CircularProgress,
 } from "@mui/material";
-
 import { unwrapResult } from "@reduxjs/toolkit";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
 const steps = ["Enter Details", "Confirm Purchase"];
 
 const Buy = ({ stock, open, handleClose, type }) => {
@@ -66,6 +66,7 @@ const Buy = ({ stock, open, handleClose, type }) => {
             type,
             userId: portfolio.id,
             price: stock.price,
+            brokerage: brokerage,
           })
         );
 
@@ -79,6 +80,16 @@ const Buy = ({ stock, open, handleClose, type }) => {
       setLoading(false);
     }
   };
+
+  const { totalPurchaseAmount, brokerage } = useMemo(() => {
+    const totalPurchaseAmount = shares * stock.price;
+    const brokerage = Math.min((totalPurchaseAmount * 0.05) / 100, 20);
+
+    return {
+      totalPurchaseAmount,
+      brokerage,
+    };
+  }, [shares, stock.price]);
 
   return (
     <Dialog open={open} onClose={_handleClose} maxWidth="md" fullWidth>
@@ -176,35 +187,35 @@ const Buy = ({ stock, open, handleClose, type }) => {
                   justifyContent: "space-between",
                 }}
               >
-                <Typography variant="body1">Stock Price: </Typography>
-                <Typography variant="body1">
-                  <strong>{formatCurr(stock.price)}</strong>
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  gap: 2,
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Typography variant="body1">Total Purchase Amount:</Typography>
-                <Typography variant="body1">
-                  <strong>{formatCurr(shares * stock.price)}</strong>
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  gap: 2,
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
                 <Typography variant="body1">Current Total Balance:</Typography>
                 <Typography variant="body1">
                   <strong>{formatCurr(portfolio.available)}</strong>
+                </Typography>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: 2,
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography variant="body1">Purchase Amount:</Typography>
+                <Typography variant="body1">
+                  <strong>{formatCurr(totalPurchaseAmount)}</strong>
+                </Typography>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: 2,
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography variant="body1">Brokerage:</Typography>
+                <Typography variant="body1">
+                  <strong>{formatCurr(brokerage)}</strong>
                 </Typography>
               </Box>
 
@@ -231,7 +242,7 @@ const Buy = ({ stock, open, handleClose, type }) => {
           variant="h6"
           sx={{ fontWeight: "bold", color: "primary.main" }}
         >
-          Total: {formatCurr(shares * stock.price)}
+          Total: {formatCurr(totalPurchaseAmount + brokerage)}
         </Typography>
         <Box
           sx={{

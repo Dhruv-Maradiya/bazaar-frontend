@@ -51,7 +51,7 @@ const Dashboard = ({
               </Box>
               <StockList
                 pageNumber={page}
-                startAt={sortedAllStocks[(page - 1) * 10]}
+                startAt={sortedAllStocks[(page - 1) * 5]}
                 searchSymbols={searchSymbols}
               />
               <Box
@@ -62,7 +62,7 @@ const Dashboard = ({
                 }}
               >
                 <Pagination
-                  count={Math.ceil((sortedAllStocks?.length || 0) / 10)}
+                  count={Math.ceil((sortedAllStocks?.length || 0) / 5)}
                   page={page}
                   onChange={(e, p) => setPage(p)}
                 />
@@ -107,7 +107,7 @@ export default compose(
     return [
       {
         collection: "stocks",
-        limit: 10,
+        limit: 5,
         orderBy: ["symbol"],
         where: props.searchSymbols
           ? ["symbol", "in", props.searchSymbols]
