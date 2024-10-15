@@ -79,7 +79,7 @@ const StockDetailsView = ({ stockId, drawerRef }) => {
 
   const stock = useSelector((state) => state.firestore.data?.stocks?.[stockId]);
   const candlesDictionary = useSelector(
-    (state) => state.candles[stockId] || []
+    (state) => state.candles[stockId] || [],
   );
   const candles = Object.values(candlesDictionary);
 
@@ -98,7 +98,7 @@ const StockDetailsView = ({ stockId, drawerRef }) => {
 
   useEffect(() => {
     const lastCandle = candles?.sort(
-      (a, b) => b.startAt.seconds - a.startAt.seconds
+      (a, b) => b.startAt.seconds - a.startAt.seconds,
     )[0];
 
     const candlesRef = firestore
@@ -112,7 +112,7 @@ const StockDetailsView = ({ stockId, drawerRef }) => {
       query = query.where(
         "startAt",
         ">",
-        convertFirebaseTimestampToDate(lastCandle.startAt)
+        convertFirebaseTimestampToDate(lastCandle.startAt),
       );
     }
 
@@ -331,5 +331,5 @@ const StockDetailsView = ({ stockId, drawerRef }) => {
 export default compose(
   firestoreConnect((props) => {
     return [{ collection: "stocks", doc: props.stockId }];
-  })
+  }),
 )(StockDetailsView);

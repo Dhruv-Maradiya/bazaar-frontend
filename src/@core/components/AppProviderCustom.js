@@ -14,7 +14,7 @@ const CustomAppProvider = ({ children, settings }) => {
   const { logout, user } = useAuth();
 
   const firestoreUser = useSelector(
-    (state) => state.firestore.data?.firestoreUser
+    (state) => state.firestore.data?.firestoreUser,
   );
 
   useEffect(() => {
@@ -62,5 +62,5 @@ export default compose(
         storeAs: "firestoreUser",
       },
     ];
-  })
+  }),
 )(CustomAppProvider);

@@ -41,7 +41,7 @@ const addCandles = (
   candles,
   chartRef,
   candlestickSeriesRef,
-  fitContent = false
+  fitContent = false,
 ) => {
   const formattedCandles = formatCandles(candles);
 
@@ -64,7 +64,7 @@ const handleCrosshairMove = (
   param,
   container,
   candlestickSeries,
-  tooltipRef
+  tooltipRef,
 ) => {
   const toolTip = tooltipRef.current;
 
@@ -86,7 +86,7 @@ const handleCrosshairMove = (
       data.open,
       data.high,
       data.low,
-      data.close
+      data.close,
     );
 
     const coordinate = candlestickSeries.priceToCoordinate(price);
@@ -97,7 +97,7 @@ const handleCrosshairMove = (
     let shiftedCoordinate = param.point.x + 20;
     shiftedCoordinate = Math.max(
       0,
-      Math.min(container.clientWidth - TOOLTIP_WIDTH, shiftedCoordinate)
+      Math.min(container.clientWidth - TOOLTIP_WIDTH, shiftedCoordinate),
     );
     const coordinateY =
       coordinate - TOOLTIP_HEIGHT - TOOLTIP_MARGIN > 0
@@ -106,8 +106,8 @@ const handleCrosshairMove = (
             0,
             Math.min(
               container.clientHeight - TOOLTIP_HEIGHT - TOOLTIP_MARGIN,
-              coordinate + TOOLTIP_MARGIN
-            )
+              coordinate + TOOLTIP_MARGIN,
+            ),
           );
     toolTip.style.left = shiftedCoordinate + "px";
     toolTip.style.top = coordinateY + "px";
@@ -138,7 +138,7 @@ const StockChart = ({ candles, drawerRef, stockId }) => {
         candles,
         chartRef,
         candlestickSeriesRef,
-        !Boolean(oldCandles.current?.length) || oldStockId.current !== stockId
+        !Boolean(oldCandles.current?.length) || oldStockId.current !== stockId,
       );
       oldCandles.current = candles;
     }
@@ -186,7 +186,7 @@ const StockChart = ({ candles, drawerRef, stockId }) => {
     tooltipRef.current = createTooltip(container, theme);
 
     chart.subscribeCrosshairMove((param) =>
-      handleCrosshairMove(param, container, candlestickSeries, tooltipRef)
+      handleCrosshairMove(param, container, candlestickSeries, tooltipRef),
     );
 
     chartRef.current = chart;

@@ -45,7 +45,7 @@ const AuthProvider = ({ children }) => {
     try {
       const userCredential = await auth.signInWithEmailAndPassword(
         body.email,
-        body.password
+        body.password,
       );
 
       toast.success("Logged in successfully.");
@@ -93,8 +93,8 @@ const AuthProvider = ({ children }) => {
         const newNews = news.filter(
           (item) =>
             !initialLoad.current.oldNews.find(
-              (oldItem) => oldItem.id === item.id
-            )
+              (oldItem) => oldItem.id === item.id,
+            ),
         );
 
         // If there are new news, show a toast
@@ -110,7 +110,7 @@ const AuthProvider = ({ children }) => {
                   wordWrap: "break-word",
                   wordBreak: "break-word",
                 },
-              }
+              },
             );
           });
         }
@@ -137,10 +137,9 @@ const AuthProviderComposed = compose(
       where: ["visible", "==", true],
       storeAs: "dashboardNews",
     },
-  ])
+  ]),
 )(AuthProvider);
 
 const AuthConsumer = AuthContext.Consumer;
 
 export { AuthConsumer, AuthContext, AuthProviderComposed as AuthProvider };
-

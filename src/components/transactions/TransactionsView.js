@@ -31,7 +31,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 const TransactionsView = () => {
   const transactionsMap = useSelector(
-    (state) => state.firestore.data.transactions
+    (state) => state.firestore.data.transactions,
   );
   const allStocks = useSelector((state) => state.settings.stocks);
 
@@ -72,7 +72,7 @@ const TransactionsView = () => {
                   .sort((a, b) => b.createdAt - a.createdAt)
                   .map((transaction) => {
                     const stock = allStocks.find(
-                      (stock) => stock.id === transaction.stock.id
+                      (stock) => stock.id === transaction.stock.id,
                     );
 
                     return (
@@ -106,8 +106,8 @@ const TransactionsView = () => {
                         <TableCell>
                           {moment(
                             convertFirebaseTimestampToDate(
-                              transaction.createdAt
-                            )
+                              transaction.createdAt,
+                            ),
                           ).format("DD MMM YYYY, hh:mm")}
                         </TableCell>
                         <TableCell>{formatCurr(transaction.price)}</TableCell>
@@ -186,5 +186,5 @@ export default compose(
       subcollections: [{ collection: "transactions" }],
       storeAs: "transactions",
     },
-  ])
+  ]),
 )(TransactionsView);

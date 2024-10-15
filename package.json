@@ -43,8 +43,9 @@
     }
   },
   "devDependencies": {
-    "eslint": "^8",
-    "eslint-config-next": "14.2.13"
+    "eslint": "^8.57.1",
+    "eslint-config-next": "14.2.13",
+    "prettier": "^3.3.3"
   },
   "pnpm": {
     "patchedDependencies": {

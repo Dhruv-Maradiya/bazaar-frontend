@@ -90,7 +90,7 @@ function App(props) {
                                   <Component
                                     {...pageProps}
                                     drawerRef={drawerRef}
-                                  />
+                                  />,
                                 )}
                                 <ReactHotToast>
                                   <Toaster

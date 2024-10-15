@@ -13,13 +13,13 @@ export const buyStock = createAsyncThunk(
   "stocks/buyStock",
   async (
     { stockId, shares, userId, type, price },
-    { rejectWithValue, getState }
+    { rejectWithValue, getState },
   ) => {
     try {
       const currentPortfolio = getState().firestore.data.firestoreUser;
 
       const alreadyInvested = currentPortfolio.data?.find(
-        (stock) => stock.stock.id === stockId && stock.type === type
+        (stock) => stock.stock.id === stockId && stock.type === type,
       );
 
       let newData;
@@ -69,7 +69,7 @@ export const buyStock = createAsyncThunk(
             type: type, // BUY or SHORT SELL
             // Reference to stock document
             stock: db.collection("stocks").doc(stockId),
-          }
+          },
         );
       });
 
@@ -79,7 +79,7 @@ export const buyStock = createAsyncThunk(
 
       return rejectWithValue(error);
     }
-  }
+  },
 );
 
 // ** Sell Stock
@@ -87,7 +87,7 @@ export const sellStock = createAsyncThunk(
   "stocks/sellStock",
   async (
     { stockId, shares, userId, type, price, profitOrLoss },
-    { rejectWithValue, getState }
+    { rejectWithValue, getState },
   ) => {
     try {
       const currentPortfolio = getState().firestore.data.firestoreUser;
@@ -95,7 +95,7 @@ export const sellStock = createAsyncThunk(
       const currentHoldings = currentPortfolio?.data?.find(
         (item) =>
           item.stock.id === stockId &&
-          item.type === TransactionTypeMapSellMap[type]
+          item.type === TransactionTypeMapSellMap[type],
       );
 
       if (!currentHoldings) {
@@ -128,7 +128,7 @@ export const sellStock = createAsyncThunk(
           data: newData,
           available: firebase.firestore.FieldValue.increment(price * shares),
           invested: firebase.firestore.FieldValue.increment(
-            currentHoldings.price * shares * -1
+            currentHoldings.price * shares * -1,
           ),
           realized: firebase.firestore.FieldValue.increment(profitOrLoss),
           unrealized: firebase.firestore.FieldValue.increment(-profitOrLoss),
@@ -146,12 +146,12 @@ export const sellStock = createAsyncThunk(
             type: type, // BUY or SHORT SELL
             // Reference to stock document
             stock: db.collection("stocks").doc(stockId),
-          }
+          },
         );
       });
 
       toast.success(
-        `Stock ${type === "SELL" ? "sold" : "squared off"} successfully`
+        `Stock ${type === "SELL" ? "sold" : "squared off"} successfully`,
       );
     } catch (error) {
       console.log(error);
@@ -159,7 +159,7 @@ export const sellStock = createAsyncThunk(
 
       return rejectWithValue(error);
     }
-  }
+  },
 );
 
 // ** Fetch All Stocks
@@ -184,7 +184,7 @@ export const fetchAllStocks = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error);
     }
-  }
+  },
 );
 
 // ** Slice

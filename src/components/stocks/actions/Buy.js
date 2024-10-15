@@ -32,7 +32,7 @@ const Buy = ({ stock, open, handleClose, type }) => {
 
   const dispatch = useDispatch();
   const { firestoreUser: portfolio } = useSelector(
-    (state) => state.firestore.data
+    (state) => state.firestore.data,
   );
 
   const _handleClose = () => {
@@ -66,7 +66,7 @@ const Buy = ({ stock, open, handleClose, type }) => {
             type,
             userId: portfolio.id,
             price: stock.price,
-          })
+          }),
         );
 
         unwrapResult(results);

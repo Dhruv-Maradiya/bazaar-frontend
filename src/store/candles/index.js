@@ -7,7 +7,7 @@ export const addCandles = createAsyncThunk(
   "candles/addCandles",
   async ({ stockId, candles }) => {
     return { stockId, candles };
-  }
+  },
 );
 
 // ** Update Candle Documents
@@ -15,7 +15,7 @@ export const updateCandles = createAsyncThunk(
   "candles/updateCandles",
   async ({ stockId, candles }) => {
     return { stockId, candles };
-  }
+  },
 );
 
 // ** Remove Candle Document
@@ -23,7 +23,7 @@ export const removeCandles = createAsyncThunk(
   "candles/removeCandles",
   async ({ stockId, candleIds }) => {
     return { stockId, candleIds };
-  }
+  },
 );
 
 // ** Slice

@@ -27,7 +27,6 @@ import {
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 
-
 // Styles
 const styles = {
   symbolBadge: {
@@ -148,7 +147,7 @@ const TransactionRow = ({ purchase }) => (
   <TableRow>
     <TableCell>
       {moment(convertFirebaseTimestampToDate(purchase.createdAt)).format(
-        "DD MMM YYYY, hh:mm A"
+        "DD MMM YYYY, hh:mm A",
       )}
     </TableCell>
     <TableCell align="right">{formatCurr(purchase.price)}</TableCell>
@@ -206,17 +205,17 @@ const PortfolioDetails = ({ portfolio, open, onClose }) => {
                 key={`${portfolioStock.stock.id}-${portfolioStock.type}`}
                 portfolioStock={portfolioStock}
                 expanded={expandedStock.includes(
-                  `${portfolioStock.stock.id}-${portfolioStock.type}`
+                  `${portfolioStock.stock.id}-${portfolioStock.type}`,
                 )}
                 onToggle={() =>
                   toggleStockExpansion(
                     portfolioStock,
                     expandedStock,
-                    setExpandedStock
+                    setExpandedStock,
                   )
                 }
                 stockData={portfolioStocks.find(
-                  (s) => s.id === portfolioStock.stock.id
+                  (s) => s.id === portfolioStock.stock.id,
                 )}
                 transactions={filterTransactions(transactions, portfolioStock)}
               />
@@ -245,7 +244,7 @@ const PortfolioSummary = ({ portfolio }) => (
           label={label}
           value={portfolio?.[label.toLowerCase().replace(" p/l", "")]}
         />
-      )
+      ),
     )}
   </Box>
 );
@@ -253,30 +252,30 @@ const PortfolioSummary = ({ portfolio }) => (
 const SummaryRow = ({ label, value }) => (
   <Box
     sx={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      width: '100%',
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      width: "100%",
       fontSize: {
-        xs: '14px',  // Extra-small devices (phones)
-        sm: '16px',  // Small devices (tablets)
-        md: '18px',  // Medium devices (desktops)
-        lg: '20px',  // Large devices (large desktops)
-        xl: '24px'   // Extra-large devices (larger screens)
+        xs: "14px", // Extra-small devices (phones)
+        sm: "16px", // Small devices (tablets)
+        md: "18px", // Medium devices (desktops)
+        lg: "20px", // Large devices (large desktops)
+        xl: "24px", // Extra-large devices (larger screens)
       },
       padding: {
-        xs: '8px',   // Responsive padding for small screens
-        sm: '10px',
-        md: '12px',
-        lg: '14px',
-        xl: '16px'
+        xs: "8px", // Responsive padding for small screens
+        sm: "10px",
+        md: "12px",
+        lg: "14px",
+        xl: "16px",
       },
     }}
   >
-    <Typography variant="body1" sx={{ fontSize: 'inherit' }}>
+    <Typography variant="body1" sx={{ fontSize: "inherit" }}>
       {label}:
     </Typography>
-    <Typography variant="body1" sx={{ fontWeight: 500, fontSize: 'inherit' }}>
+    <Typography variant="body1" sx={{ fontWeight: 500, fontSize: "inherit" }}>
       {formatCurr(value)}
     </Typography>
   </Box>
@@ -295,21 +294,30 @@ const Portfolio = () => {
           </Typography>
         </Box>
         <Box>
-          <Typography sx={{
-            fontSize: {
-              xs: '14px',
-              sm: '16px',
-              md: '18px',
-              lg: '20px',
-              xl: '24px'
-            }
-          }} variant="subtitle2">Your portfolio</Typography>
+          <Typography
+            sx={{
+              fontSize: {
+                xs: "14px",
+                sm: "16px",
+                md: "18px",
+                lg: "20px",
+                xl: "24px",
+              },
+            }}
+            variant="subtitle2"
+          >
+            Your portfolio
+          </Typography>
           <Typography variant="caption" color="text.secondary">
             Only you can see this
           </Typography>
         </Box>
       </Box>
-      <Typography sx={{ fontWeight: 'bold',  fontWeight: 500 }} variant="h4" gutterBottom>
+      <Typography
+        sx={{ fontWeight: "bold", fontWeight: 500 }}
+        variant="h4"
+        gutterBottom
+      >
         {formatCurr(portfolio?.total)}
       </Typography>
       <PortfolioSummary portfolio={portfolio} />
@@ -346,7 +354,7 @@ const calculateGainPercent = (portfolioStock, stockData) => {
 const fetchPortfolioData = async (
   portfolio,
   setPortfolioStocks,
-  setTransactions
+  setTransactions,
 ) => {
   if (!portfolio.data || portfolio.data.length === 0) {
     setPortfolioStocks([]);
@@ -360,7 +368,7 @@ const fetchPortfolioData = async (
       .where(
         firebase.firestore.FieldPath.documentId(),
         "in",
-        portfolio.data.map((stock) => stock.stock.id)
+        portfolio.data.map((stock) => stock.stock.id),
       )
       .get(),
     firestore
@@ -377,11 +385,11 @@ const fetchPortfolioData = async (
 const toggleStockExpansion = (
   portfolioStock,
   expandedStock,
-  setExpandedStock
+  setExpandedStock,
 ) => {
   const rowId = `${portfolioStock.stock.id}-${portfolioStock.type}`;
   setExpandedStock((prev) =>
-    prev.includes(rowId) ? prev.filter((id) => id !== rowId) : [...prev, rowId]
+    prev.includes(rowId) ? prev.filter((id) => id !== rowId) : [...prev, rowId],
   );
 };
 
@@ -389,7 +397,7 @@ const filterTransactions = (transactions, portfolioStock) =>
   transactions.filter(
     (t) =>
       t.stock.id === portfolioStock.stock.id &&
-      TransactionTypeMapBuyMap[portfolioStock.type].includes(t.type)
+      TransactionTypeMapBuyMap[portfolioStock.type].includes(t.type),
   );
 
 export default Portfolio;

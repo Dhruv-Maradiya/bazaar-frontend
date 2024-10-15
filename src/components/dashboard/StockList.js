@@ -11,8 +11,6 @@ import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
-
-
 const StockList = ({ searchSymbols }) => {
   useEffect(() => {
     AOS.init();
@@ -51,7 +49,7 @@ const StockList = ({ searchSymbols }) => {
         alignItems: "center",
         flexDirection: "row", // Always horizontal layout
         justifyContent: "space-between", // Space between items
-        '&:hover': {
+        "&:hover": {
           backgroundColor: grey[50],
         },
       }}
@@ -79,15 +77,21 @@ const StockList = ({ searchSymbols }) => {
             display: { xs: "none", sm: "flex" }, // Hide on mobile
           }}
         />
-        <Typography sx={{
-          fontSize: {
-            xs: '0.8rem',
-            sm: '0.9rem',
-          },
-          marginRight: {
-            xs: '0.5rem',
-          }
-        }} variant="subtitle1" fontWeight="bold">{stock.name}</Typography>
+        <Typography
+          sx={{
+            fontSize: {
+              xs: "0.8rem",
+              sm: "0.9rem",
+            },
+            marginRight: {
+              xs: "0.5rem",
+            },
+          }}
+          variant="subtitle1"
+          fontWeight="bold"
+        >
+          {stock.name}
+        </Typography>
       </Box>
 
       <Box
@@ -102,8 +106,8 @@ const StockList = ({ searchSymbols }) => {
           sx={{
             fontWeight: 700,
             fontSize: {
-              xs: '0.9rem', // Smaller font size for mobile
-              sm: '1.2rem', // Original font size for larger screens
+              xs: "0.9rem", // Smaller font size for mobile
+              sm: "1.2rem", // Original font size for larger screens
             },
           }}
         >
@@ -124,14 +128,14 @@ const StockList = ({ searchSymbols }) => {
             fontWeight: 500,
             fontSize: {
               xs: "0.875rem",
-              lg: "1rem"
+              lg: "1rem",
             },
             marginLeft: {
-              xs: "1.0rem"
+              xs: "1.0rem",
             },
             marginRight: {
-              xs: "1.0rem"
-            }
+              xs: "1.0rem",
+            },
           }}
         >
           {stock.change > 0 ? "+" : ""}
@@ -153,13 +157,13 @@ const StockList = ({ searchSymbols }) => {
           <ArrowUpwardIcon
             color="success"
             fontSize="small"
-            sx={{ marginRight: '4px' }}
+            sx={{ marginRight: "4px" }}
           />
         ) : (
           <ArrowDownwardIcon
             color="error"
             fontSize="small"
-            sx={{ marginRight: '4px' }}
+            sx={{ marginRight: "4px" }}
           />
         )}
         <Typography
@@ -167,7 +171,7 @@ const StockList = ({ searchSymbols }) => {
             color: stock.change > 0 ? green[700] : red[700],
             fontSize: {
               xs: "0.875rem",
-              lg: "1rem"
+              lg: "1rem",
             },
             fontWeight: 500,
           }}

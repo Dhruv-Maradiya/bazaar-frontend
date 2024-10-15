@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0 # Fetch all history for all branches and tags
-          
+
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
@@ -29,8 +29,8 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.9.0'
-          cache: 'pnpm'
+          node-version: "20.9.0"
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install

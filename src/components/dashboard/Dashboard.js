@@ -2,7 +2,7 @@ import News from "@/components/dashboard/News";
 import Portfolio from "@/components/dashboard/Portfolio";
 import Searchbar from "@/components/dashboard/Searchbar";
 import StockList from "@/components/dashboard/StockList";
-import Divider from '@mui/material/Divider';
+import Divider from "@mui/material/Divider";
 import {
   Box,
   Card,
@@ -96,8 +96,17 @@ const Dashboard = ({
               flexDirection: "column",
             }}
           >
-            <Typography sx={{ fontWeight: "bold", color: "#0285FF" }} variant="h6">News</Typography>
-            <Divider sx={{ borderBottomWidth: 2 }} orientation="horizontal" flexItem />
+            <Typography
+              sx={{ fontWeight: "bold", color: "#0285FF" }}
+              variant="h6"
+            >
+              News
+            </Typography>
+            <Divider
+              sx={{ borderBottomWidth: 2 }}
+              orientation="horizontal"
+              flexItem
+            />
             <News />
           </Box>
         </Grid2>
@@ -122,5 +131,5 @@ export default compose(
         storeAs: "dashboardStocks",
       },
     ];
-  })
+  }),
 )(memo(Dashboard));

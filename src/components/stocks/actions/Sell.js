@@ -69,7 +69,7 @@ const Sell = ({ stock, open, handleClose, type }) => {
           userId: portfolio.id,
           price: stock.price,
           profitOrLoss: profitLoss,
-        })
+        }),
       );
 
       unwrapResult(results);
@@ -83,7 +83,7 @@ const Sell = ({ stock, open, handleClose, type }) => {
       const currentHoldings = portfolio?.data?.find(
         (item) =>
           item.stock.id === stock.id &&
-          item.type === TransactionTypeMapSellMap[type]
+          item.type === TransactionTypeMapSellMap[type],
       );
 
       const totalValue = currentHoldings?.shares * currentHoldings?.price;

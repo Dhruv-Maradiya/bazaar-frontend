@@ -45,10 +45,15 @@ const News = () => {
             <div data-aos="flip-up">
               <CardContent>
                 <Box>
-                  <Typography sx={{ fontWeight: "bold", textDecoration: "underline" }} variant="h6">{item.title}</Typography>
+                  <Typography
+                    sx={{ fontWeight: "bold", textDecoration: "underline" }}
+                    variant="h6"
+                  >
+                    {item.title}
+                  </Typography>
                   <Typography variant="caption">
                     {moment(
-                      convertFirebaseTimestampToDate(item.releaseAt)
+                      convertFirebaseTimestampToDate(item.releaseAt),
                     ).fromNow()}
                   </Typography>
                 </Box>
