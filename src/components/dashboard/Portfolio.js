@@ -236,6 +236,7 @@ const PortfolioSummary = ({ portfolio }) => (
       alignItems: "center",
       mb: 2,
       flexDirection: "column",
+      color: '#000'
     }}
   >
     {["Invested", "Available", "Realized P/L", "Unrealized P/L"].map(
@@ -253,14 +254,30 @@ const PortfolioSummary = ({ portfolio }) => (
 const SummaryRow = ({ label, value }) => (
   <Box
     sx={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      width: "100%",
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      width: '100%',
+      fontSize: {
+        xs: '14px',  // Extra-small devices (phones)
+        sm: '16px',  // Small devices (tablets)
+        md: '18px',  // Medium devices (desktops)
+        lg: '20px',  // Large devices (large desktops)
+        xl: '24px'   // Extra-large devices (larger screens)
+      },
+      padding: {
+        xs: '8px',   // Responsive padding for small screens
+        sm: '10px',
+        md: '12px',
+        lg: '14px',
+        xl: '16px'
+      },
     }}
   >
-    <Typography variant="body1">{label}:</Typography>
-    <Typography variant="body1" sx={{ fontWeight: 600 }}>
+    <Typography variant="body1" sx={{ fontSize: 'inherit' }}>
+      {label}:
+    </Typography>
+    <Typography variant="body1" sx={{ fontWeight: 500, fontSize: 'inherit' }}>
       {formatCurr(value)}
     </Typography>
   </Box>
@@ -279,13 +296,21 @@ const Portfolio = () => {
           </Typography>
         </Box>
         <Box>
-          <Typography variant="subtitle2">Your portfolios</Typography>
+          <Typography sx={{
+            fontSize: {
+              xs: '14px',
+              sm: '16px',
+              md: '18px',
+              lg: '20px',
+              xl: '24px'
+            }
+          }} variant="subtitle2">Your portfolio</Typography>
           <Typography variant="caption" color="text.secondary">
             Only you can see this
           </Typography>
         </Box>
       </Box>
-      <Typography variant="h4" gutterBottom>
+      <Typography sx={{ fontWeight: 'bold', color: '#000', fontWeight: 500 }} variant="h4" gutterBottom>
         {formatCurr(portfolio?.total)}
       </Typography>
       <PortfolioSummary portfolio={portfolio} />
