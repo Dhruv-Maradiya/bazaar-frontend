@@ -11,7 +11,7 @@ const fetchStocks = async () => {
     ...doc.data(),
   }));
 };
-const TrendingStocks = ({ stockId }) => {
+const TrendingStocks = ({ stockId, top }) => {
   const [stocks, setStocks] = useState([]);
 
   useEffect(() => {
@@ -31,6 +31,7 @@ const TrendingStocks = ({ stockId }) => {
         position: "absolute",
         overflowX: "hidden",
         maxHeight: "80px",
+        top: top || 0,
       }}
     >
       <Marquee

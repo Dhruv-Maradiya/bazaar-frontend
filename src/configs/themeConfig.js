@@ -6,7 +6,7 @@
  */
 const themeConfig = {
   // ** Layout Configs
-  appName: "Bazaar" /* App Name */,
+  appName: "Bazaar 6.0" /* App Name */,
   mode: "light" /* light | dark | semi-dark /*! Note: semi-dark value will only work for Vertical Layout */,
   toastPosition:
     "top-right" /* top-left | top-center | top-right | bottom-left | bottom-center | bottom-right */,

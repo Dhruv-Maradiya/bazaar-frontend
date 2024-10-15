@@ -70,6 +70,8 @@ const Sell = ({ stock, open, handleClose, type }) => {
           price: stock.price,
           profitOrLoss: profitLoss,
         }),
+          brokerage,
+        })
       );
 
       unwrapResult(results);
@@ -78,7 +80,7 @@ const Sell = ({ stock, open, handleClose, type }) => {
     }
   };
 
-  const { currentHoldings, profitLoss, currentValue, saleAmount } =
+  const { currentHoldings, profitLoss, currentValue, saleAmount, brokerage } =
     useMemo(() => {
       const currentHoldings = portfolio?.data?.find(
         (item) =>
@@ -92,6 +94,7 @@ const Sell = ({ stock, open, handleClose, type }) => {
       const profitLoss =
         (shares * stock.price - shares * currentHoldings?.price) *
         (type === "SELL" ? 1 : -1);
+      const brokerage = Math.min((0.05 * saleAmount) / 100, 20);
 
       return {
         currentHoldings,
@@ -99,6 +102,7 @@ const Sell = ({ stock, open, handleClose, type }) => {
         totalValue,
         currentValue,
         saleAmount,
+        brokerage,
       };
     }, [portfolio?.data, shares, stock.id, stock.price, type]);
 
@@ -165,35 +169,6 @@ const Sell = ({ stock, open, handleClose, type }) => {
             <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
               Sale Summary
             </Typography>
-
-            <Box
-              sx={{
-                display: "flex",
-                gap: 2,
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Typography variant="body1">Stock Price: </Typography>
-              <Typography variant="body1">
-                <strong>{formatCurr(stock.price)}</strong>
-              </Typography>
-            </Box>
-
-            <Box
-              sx={{
-                display: "flex",
-                gap: 2,
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Typography variant="body1">Total Sale Amount: </Typography>
-              <Typography variant="body1">
-                <strong>{formatCurr(saleAmount)}</strong>
-              </Typography>
-            </Box>
-
             <Box
               sx={{
                 display: "flex",
@@ -215,9 +190,36 @@ const Sell = ({ stock, open, handleClose, type }) => {
                 justifyContent: "space-between",
               }}
             >
+              <Typography variant="body1">Sale Amount: </Typography>
+              <Typography variant="body1">
+                <strong>{formatCurr(saleAmount)}</strong>
+              </Typography>
+            </Box>
+
+            <Box
+              sx={{
+                display: "flex",
+                gap: 2,
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
               <Typography variant="body1">Profit/Loss:</Typography>
               <Typography variant="body1">
                 <strong>{formatCurr(profitLoss)}</strong>
+              </Typography>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                gap: 2,
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Typography variant="body1">Brokerage:</Typography>
+              <Typography variant="body1">
+                <strong>{formatCurr(brokerage)}</strong>
               </Typography>
             </Box>
 
@@ -290,7 +292,7 @@ const Sell = ({ stock, open, handleClose, type }) => {
             variant="h6"
             sx={{ fontWeight: "bold", color: "primary.main" }}
           >
-            Total: {formatCurr(shares * stock.price)}
+            Total: {formatCurr(shares * stock.price + brokerage)}
           </Typography>
         ) : null}
         <Box

@@ -14,6 +14,8 @@ export const buyStock = createAsyncThunk(
   async (
     { stockId, shares, userId, type, price },
     { rejectWithValue, getState },
+    { stockId, shares, userId, type, price, brokerage },
+    { rejectWithValue, getState }
   ) => {
     try {
       const currentPortfolio = getState().firestore.data.firestoreUser;
@@ -53,7 +55,9 @@ export const buyStock = createAsyncThunk(
 
       await db.runTransaction(async (transaction) => {
         transaction.update(db.collection("users").doc(userId), {
-          available: firebase.firestore.FieldValue.increment(-price * shares),
+          available: firebase.firestore.FieldValue.increment(
+            -(price * shares + brokerage)
+          ),
           invested: firebase.firestore.FieldValue.increment(price * shares),
           data: newData,
         });
@@ -88,6 +92,8 @@ export const sellStock = createAsyncThunk(
   async (
     { stockId, shares, userId, type, price, profitOrLoss },
     { rejectWithValue, getState },
+    { stockId, shares, userId, type, price, profitOrLoss, brokerage },
+    { rejectWithValue, getState }
   ) => {
     try {
       const currentPortfolio = getState().firestore.data.firestoreUser;
@@ -126,7 +132,9 @@ export const sellStock = createAsyncThunk(
         // Update portfolio
         transaction.update(db.collection("users").doc(userId), {
           data: newData,
-          available: firebase.firestore.FieldValue.increment(price * shares),
+          available: firebase.firestore.FieldValue.increment(
+            price * shares - brokerage
+          ),
           invested: firebase.firestore.FieldValue.increment(
             currentHoldings.price * shares * -1,
           ),

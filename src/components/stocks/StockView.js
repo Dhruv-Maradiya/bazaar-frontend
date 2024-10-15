@@ -15,7 +15,7 @@ const StockView = ({ stockId, drawerRef }) => {
         overflowX: "hidden",
       }}
     >
-      <TrendingStocks stockId={stockId} />
+      <TrendingStocks stockId={stockId} top={10} />
       <StockDetailsView stockId={stockId} drawerRef={drawerRef} />
     </Box>
   );
