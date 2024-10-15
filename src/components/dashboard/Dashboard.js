@@ -10,9 +10,9 @@ import {
   Pagination,
   Typography,
 } from "@mui/material";
-import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "@reduxjs/toolkit";
 import { memo } from "react";
+import { firestoreConnect } from "react-redux-firebase";
 
 const Dashboard = ({
   page,
