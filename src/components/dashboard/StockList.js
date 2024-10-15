@@ -32,7 +32,7 @@ const StockList = ({ searchSymbols }) => {
     changePercent: ((stock.price - stock.open) / stock.open) * 100,
   }));
 
-  return stocksArray.map((stock, index) => (
+  return stocksArray.map((stock) => (
     <Box
       key={stock.symbol}
       sx={{
@@ -40,28 +40,25 @@ const StockList = ({ searchSymbols }) => {
         padding: "12px 0",
         display: "flex",
         alignItems: "center",
-        flexDirection: {
-          xs: "column",
-          sm: "row",
-        },
+        flexDirection: "row", // Always horizontal layout
+        justifyContent: "space-between", // Space between items
         '&:hover': {
           backgroundColor: grey[50],
         },
       }}
     >
-      {/* Render Chip only for larger screens */}
+      {/* Stock symbol and name displayed on all screens */}
       <Box
         sx={{
-          flex: 0.4,
-          display: { xs: "none", sm: "flex" }, // Hide on mobile
+          display: "flex",
           alignItems: "center",
-          gap: 1,
           cursor: "pointer",
         }}
         onClick={() => {
           router.push(`/stocks/${stock.id}`);
         }}
       >
+        {/* Display Chip only on larger screens */}
         <Chip
           label={stock.symbol}
           size="small"
@@ -69,49 +66,40 @@ const StockList = ({ searchSymbols }) => {
             backgroundColor: "#76b82a",
             color: "white",
             borderRadius: 1,
+            marginRight: 1,
+            display: { xs: "none", sm: "flex" }, // Hide on mobile
           }}
         />
         <Typography variant="subtitle1" fontWeight="bold">{stock.name}</Typography>
       </Box>
 
-      {/* Stock name displayed on all screens */}
       <Box
         sx={{
-          flex: 0.4,
-          display: "flex",
-          alignItems: "center",
-          cursor: "pointer",
-        }}
-        onClick={() => {
-          router.push(`/stocks/${stock.id}`);
-        }}
-      >
-        <Typography variant="subtitle1" fontWeight="bold">{stock.name}</Typography>
-      </Box>
-
-      <Box
-        sx={{
-          flex: 0.2,
           display: "flex",
           justifyContent: "center",
+          flex: 1,
         }}
       >
         <Typography
           variant="body1"
           sx={{
             fontWeight: 700,
-            fontSize: '1.2rem',
+            fontSize: {
+              xs: '0.9rem', // Smaller font size for mobile
+              sm: '1.2rem', // Original font size for larger screens
+            },
             color: 'black',
           }}
         >
           {formatCurr(stock.price)}
         </Typography>
       </Box>
+
       <Box
         sx={{
-          flex: 0.2,
           display: "flex",
           justifyContent: "center",
+          flex: 1,
         }}
       >
         <Typography
@@ -125,9 +113,9 @@ const StockList = ({ searchSymbols }) => {
           {formatCurr(stock.change)}
         </Typography>
       </Box>
+
       <Box
         sx={{
-          flex: 0.2,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
