@@ -21,6 +21,7 @@
     "@mui/system": "^6.1.1",
     "@reduxjs/toolkit": "^2.2.7",
     "@toolpad/core": "^0.7.0",
+    "aos": "^2.3.4",
     "currency-formatter": "^1.5.9",
     "firebase": "^10.13.2",
     "lightweight-charts": "^4.2.1",

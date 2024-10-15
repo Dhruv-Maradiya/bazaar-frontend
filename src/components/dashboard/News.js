@@ -42,35 +42,37 @@ const News = () => {
         })
         ?.map((item) => (
           <Card key={item.id}>
-            <CardContent>
-              <Box>
-                <Typography variant="h6">{item.title}</Typography>
-                <Typography variant="caption">
-                  {moment(
-                    convertFirebaseTimestampToDate(item.releaseAt)
-                  ).fromNow()}
-                </Typography>
-              </Box>
-              <Typography variant="body1">{item.description}</Typography>
-              {item.source && (
-                <Link
-                  href={item.source}
-                  target="_blank"
-                  style={{ textDecoration: "none" }}
-                >
-                  <Typography
-                    variant="caption"
-                    color="primary"
-                    sx={{
-                      cursor: "pointer",
-                      textDecoration: "none !important",
-                    }}
-                  >
-                    View Sources
+            <div data-aos="flip-up">
+              <CardContent>
+                <Box>
+                  <Typography sx={{ fontWeight: "bold", textDecoration: "underline" }} variant="h6">{item.title}</Typography>
+                  <Typography variant="caption">
+                    {moment(
+                      convertFirebaseTimestampToDate(item.releaseAt)
+                    ).fromNow()}
                   </Typography>
-                </Link>
-              )}
-            </CardContent>
+                </Box>
+                <Typography variant="body1">{item.description}</Typography>
+                {item.source && (
+                  <Link
+                    href={item.source}
+                    target="_blank"
+                    style={{ textDecoration: "none" }}
+                  >
+                    <Typography
+                      variant="caption"
+                      color="primary"
+                      sx={{
+                        cursor: "pointer",
+                        textDecoration: "none !important",
+                      }}
+                    >
+                      View Sources
+                    </Typography>
+                  </Link>
+                )}
+              </CardContent>
+            </div>
           </Card>
         ))}
     </Box>

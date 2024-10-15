@@ -2,6 +2,7 @@ import News from "@/components/dashboard/News";
 import Portfolio from "@/components/dashboard/Portfolio";
 import Searchbar from "@/components/dashboard/Searchbar";
 import StockList from "@/components/dashboard/StockList";
+import Divider from '@mui/material/Divider';
 import {
   Box,
   Card,
@@ -49,11 +50,13 @@ const Dashboard = ({
               >
                 <Typography variant="h6">All Stocks</Typography>
               </Box>
-              <StockList
-                pageNumber={page}
-                startAt={sortedAllStocks[(page - 1) * 10]}
-                searchSymbols={searchSymbols}
-              />
+              <div data-aos="zoom-in">
+                <StockList
+                  pageNumber={page}
+                  startAt={sortedAllStocks[(page - 1) * 10]}
+                  searchSymbols={searchSymbols}
+                />
+              </div>
               <Box
                 sx={{
                   display: "flex",
@@ -78,7 +81,9 @@ const Dashboard = ({
         >
           <Card>
             <CardContent>
-              <Portfolio />
+              <div data-aos="zoom-in">
+                <Portfolio />
+              </div>
             </CardContent>
           </Card>
         </Grid2>
@@ -91,7 +96,8 @@ const Dashboard = ({
               flexDirection: "column",
             }}
           >
-            <Typography variant="h6">News</Typography>
+            <Typography sx={{ fontWeight: "bold", color: "#0285FF" }} variant="h6">News</Typography>
+            <Divider sx={{ borderBottomWidth: 2 }} orientation="horizontal" flexItem />
             <News />
           </Box>
         </Grid2>

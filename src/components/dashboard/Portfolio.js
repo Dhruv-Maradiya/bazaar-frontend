@@ -236,7 +236,6 @@ const PortfolioSummary = ({ portfolio }) => (
       alignItems: "center",
       mb: 2,
       flexDirection: "column",
-      color: '#000'
     }}
   >
     {["Invested", "Available", "Realized P/L", "Unrealized P/L"].map(
@@ -310,11 +309,12 @@ const Portfolio = () => {
           </Typography>
         </Box>
       </Box>
-      <Typography sx={{ fontWeight: 'bold', color: '#000', fontWeight: 500 }} variant="h4" gutterBottom>
+      <Typography sx={{ fontWeight: 'bold',  fontWeight: 500 }} variant="h4" gutterBottom>
         {formatCurr(portfolio?.total)}
       </Typography>
       <PortfolioSummary portfolio={portfolio} />
       <Button
+        sx={{ borderRadius: "11px" }}
         fullWidth
         variant="outlined"
         onClick={() => setOpenPortfolioDetails(true)}

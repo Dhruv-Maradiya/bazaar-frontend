@@ -7,8 +7,17 @@ import { green, red, grey } from "@mui/material/colors";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { memo } from "react";
+import { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
+
+
 
 const StockList = ({ searchSymbols }) => {
+  useEffect(() => {
+    AOS.init();
+    AOS.refresh();
+  }, []);
   const stocks = useSelector((state) => state.firestore.data.dashboardStocks);
   const router = useRouter();
 
@@ -70,7 +79,15 @@ const StockList = ({ searchSymbols }) => {
             display: { xs: "none", sm: "flex" }, // Hide on mobile
           }}
         />
-        <Typography variant="subtitle1" fontWeight="bold">{stock.name}</Typography>
+        <Typography sx={{
+          fontSize: {
+            xs: '0.8rem',
+            sm: '0.9rem',
+          },
+          marginRight: {
+            xs: '0.5rem',
+          }
+        }} variant="subtitle1" fontWeight="bold">{stock.name}</Typography>
       </Box>
 
       <Box
@@ -88,7 +105,6 @@ const StockList = ({ searchSymbols }) => {
               xs: '0.9rem', // Smaller font size for mobile
               sm: '1.2rem', // Original font size for larger screens
             },
-            color: 'black',
           }}
         >
           {formatCurr(stock.price)}
@@ -106,7 +122,16 @@ const StockList = ({ searchSymbols }) => {
           sx={{
             color: stock.change > 0 ? green[700] : red[700],
             fontWeight: 500,
-            fontSize: '1rem',
+            fontSize: {
+              xs: "0.875rem",
+              lg: "1rem"
+            },
+            marginLeft: {
+              xs: "1.0rem"
+            },
+            marginRight: {
+              xs: "1.0rem"
+            }
           }}
         >
           {stock.change > 0 ? "+" : ""}
@@ -140,6 +165,10 @@ const StockList = ({ searchSymbols }) => {
         <Typography
           sx={{
             color: stock.change > 0 ? green[700] : red[700],
+            fontSize: {
+              xs: "0.875rem",
+              lg: "1rem"
+            },
             fontWeight: 500,
           }}
         >
