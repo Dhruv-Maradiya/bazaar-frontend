@@ -90,8 +90,14 @@ const StockList = ({ searchSymbols }) => {
       >
         <Typography
           sx={{
-            color: stock.change > 0 ? green[700] : red[700],
-            fontWeight: 500,
+            color: (theme) =>
+              stock.change > 0
+                ? theme.palette.mode === "dark"
+                  ? green[500]
+                  : green[600]
+                : theme.palette.mode === "dark"
+                  ? red[400]
+                  : red[600],
           }}
         >
           {stock.change > 0 ? "+" : ""}

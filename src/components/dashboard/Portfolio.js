@@ -29,6 +29,7 @@ import moment from "moment";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import CloseIcon from "@mui/icons-material/Close";
 
 // Styles
 const styles = {
@@ -187,6 +188,9 @@ const PortfolioChart = ({ history }) => {
       },
       xaxis: {
         type: "datetime",
+        labels: {
+          datetimeUTC: false,
+        },
       },
       yaxis: {
         labels: {
@@ -252,7 +256,18 @@ const PortfolioDetails = ({ portfolio, open, onClose }) => {
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl">
-      <DialogTitle>Portfolio Details</DialogTitle>
+      <DialogTitle
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="h6">Portfolio Details</Typography>
+        <IconButton onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
       <DialogContent
         sx={{
           display: "flex",
