@@ -53,6 +53,7 @@ export default function StockDashboard() {
               ? sortedAllStocks.map((stock) => stock.symbol)
               : undefined
           }
+          startAt={sortedAllStocks[(page - 1) * 5]}
         />
       </PageContainer>
     </Box>
