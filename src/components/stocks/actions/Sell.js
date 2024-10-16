@@ -5,6 +5,7 @@ import {
   TransactionTypeMapSellMap,
 } from "@/utils/timestamp";
 import CloseIcon from "@mui/icons-material/Close";
+import { CircularProgress } from "@mui/material";
 import {
   Alert,
   Box,
@@ -31,6 +32,7 @@ const steps = ["Enter Details", "Confirm Sale"];
 const Sell = ({ stock, open, handleClose, type }) => {
   const [shares, setShares] = useState(1);
   const [activeStep, setActiveStep] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const portfolio = useSelector((state) => state.firestore.data.firestoreUser);
   const dispatch = useDispatch();
@@ -53,57 +55,73 @@ const Sell = ({ stock, open, handleClose, type }) => {
     setShares(parseInt(e.target.value));
   };
 
-  const handleSell = async () => {
-    if (activeStep === 0) {
-      if (parseInt(shares) > currentHoldings.shares) {
-        toast.error("Quantity can not exceed current holdings!");
+  const handleSell = async (e) => {
+    if (e) e.preventDefault();
+    try {
+      if (activeStep === 0) {
+        if (parseInt(shares) > currentHoldings.shares) {
+          toast.error("Quantity can not exceed current holdings!");
+        } else {
+          setActiveStep(1);
+        }
       } else {
-        setActiveStep(1);
+        setLoading(true);
+
+        let results = await dispatch(
+          sellStock({
+            stockId: stock.id,
+            shares: parseInt(shares),
+            type,
+            userId: portfolio.id,
+            price: stock.price,
+            profitOrLoss: profitLoss,
+            brokerage,
+          })
+        );
+
+        unwrapResult(results);
+
+        _handleClose();
       }
-    } else {
-      let results = await dispatch(
-        sellStock({
-          stockId: stock.id,
-          shares: parseInt(shares),
-          type,
-          userId: portfolio.id,
-          price: stock.price,
-          profitOrLoss: profitLoss,
-          brokerage,
-        })
-      );
-
-      unwrapResult(results);
-
-      _handleClose();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const { currentHoldings, profitLoss, currentValue, saleAmount, brokerage } =
-    useMemo(() => {
-      const currentHoldings = portfolio?.data?.find(
-        (item) =>
-          item.stock.id === stock.id &&
-          item.type === TransactionTypeMapSellMap[type]
-      );
+  const {
+    currentHoldings,
+    profitLoss,
+    currentValue,
+    saleAmount,
+    brokerage,
+    total,
+  } = useMemo(() => {
+    const currentHoldings = portfolio?.data?.find(
+      (item) =>
+        item.stock.id === stock.id &&
+        item.type === TransactionTypeMapSellMap[type]
+    );
 
-      const totalValue = currentHoldings?.shares * currentHoldings?.price;
-      const currentValue = currentHoldings?.shares * stock.price;
-      const saleAmount = shares * stock.price;
-      const profitLoss =
-        (shares * stock.price - shares * currentHoldings?.price) *
-        (type === "SELL" ? 1 : -1);
-      const brokerage = Math.min((0.05 * saleAmount) / 100, 20);
+    const totalValue = currentHoldings?.shares * currentHoldings?.price;
+    const currentValue = currentHoldings?.shares * stock.price;
+    const saleAmount = shares * stock.price;
+    const profitLoss =
+      (shares * stock.price - shares * currentHoldings?.price) *
+      (type === "SELL" ? 1 : -1);
+    const brokerage = Math.min((0.05 * saleAmount) / 100, 20);
 
-      return {
-        currentHoldings,
-        profitLoss,
-        totalValue,
-        currentValue,
-        saleAmount,
-        brokerage,
-      };
-    }, [portfolio?.data, shares, stock.id, stock.price, type]);
+    return {
+      currentHoldings,
+      profitLoss,
+      totalValue,
+      currentValue,
+      saleAmount,
+      brokerage,
+      total: saleAmount + brokerage,
+    };
+  }, [portfolio?.data, shares, stock.id, stock.price, type]);
 
   const content = currentHoldings ? (
     <DialogContent>
@@ -137,30 +155,33 @@ const Sell = ({ stock, open, handleClose, type }) => {
         }}
       >
         {activeStep === 0 && (
-          <Box>
-            <TextField
-              label="Shares"
-              type="number"
-              size="medium"
-              value={shares}
-              onChange={handleSharesChange}
-              fullWidth
-              variant="outlined"
-              slotProps={{
-                htmlInput: {
-                  min: 1,
-                },
-              }}
-              sx={{ mb: 3 }}
-            />
-            <Typography variant="body1">
-              Current Holdings: <strong>{currentHoldings.shares}</strong> shares
-              at <strong>{formatCurr(currentHoldings.price)}</strong> per share
-            </Typography>
-            <Typography variant="body1">
-              Total Value: <strong>{formatCurr(currentValue)}</strong>
-            </Typography>
-          </Box>
+          <form onSubmit={handleSell}>
+            <Box>
+              <TextField
+                label="Shares"
+                type="number"
+                size="medium"
+                value={shares}
+                onChange={handleSharesChange}
+                fullWidth
+                variant="outlined"
+                slotProps={{
+                  htmlInput: {
+                    min: 1,
+                  },
+                }}
+                sx={{ mb: 3 }}
+              />
+              <Typography variant="body1">
+                Current Holdings: <strong>{currentHoldings.shares}</strong>{" "}
+                shares at <strong>{formatCurr(currentHoldings.price)}</strong>{" "}
+                per share
+              </Typography>
+              <Typography variant="body1">
+                Total Value: <strong>{formatCurr(currentValue)}</strong>
+              </Typography>
+            </Box>
+          </form>
         )}
 
         {activeStep === 1 && (
@@ -291,7 +312,7 @@ const Sell = ({ stock, open, handleClose, type }) => {
             variant="h6"
             sx={{ fontWeight: "bold", color: "primary.main" }}
           >
-            Total: {formatCurr(shares * stock.price + brokerage)}
+            Total: {formatCurr(total)}
           </Typography>
         ) : null}
         <Box
@@ -304,7 +325,24 @@ const Sell = ({ stock, open, handleClose, type }) => {
             Cancel
           </Button>
           {currentHoldings ? (
-            <Button onClick={handleSell} color="success" variant="contained">
+            <Button
+              onClick={handleSell}
+              color="success"
+              variant="contained"
+              loadingPosition="start"
+              disabled={
+                loading || shares > currentHoldings?.shares || shares < 1
+              }
+            >
+              {loading ? (
+                <CircularProgress
+                  size={24}
+                  sx={{
+                    mr: 1,
+                    color: (theme) => theme.palette.common.white,
+                  }}
+                />
+              ) : null}
               {TransactionTypeMap[type]}
             </Button>
           ) : null}

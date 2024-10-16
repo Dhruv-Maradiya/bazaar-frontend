@@ -53,7 +53,8 @@ const Buy = ({ stock, open, handleClose, type }) => {
     setShares(parseInt(e.target.value));
   };
 
-  const handleBuy = async () => {
+  const handleBuy = async (e) => {
+    if (e) e.preventDefault();
     try {
       if (activeStep === 0) {
         setActiveStep(1);
@@ -81,13 +82,14 @@ const Buy = ({ stock, open, handleClose, type }) => {
     }
   };
 
-  const { totalPurchaseAmount, brokerage } = useMemo(() => {
-    const totalPurchaseAmount = shares * stock.price;
-    const brokerage = Math.min((totalPurchaseAmount * 0.05) / 100, 20);
+  const { purchaseAmount, brokerage, total } = useMemo(() => {
+    const purchaseAmount = shares * stock.price;
+    const brokerage = Math.min((purchaseAmount * 0.05) / 100, 20);
 
     return {
-      totalPurchaseAmount,
+      purchaseAmount,
       brokerage,
+      total: purchaseAmount + brokerage,
     };
   }, [shares, stock.price]);
 
@@ -158,21 +160,23 @@ const Buy = ({ stock, open, handleClose, type }) => {
           }}
         >
           {activeStep === 0 && (
-            <Box>
-              <TextField
-                label="Shares"
-                type="number"
-                size="medium"
-                value={shares}
-                onChange={handleSharesChange}
-                fullWidth
-                slotProps={{
-                  htmlInput: {
-                    min: 1,
-                  },
-                }}
-              />
-            </Box>
+            <form onSubmit={handleBuy}>
+              <Box>
+                <TextField
+                  label="Shares"
+                  type="number"
+                  size="medium"
+                  value={shares}
+                  onChange={handleSharesChange}
+                  fullWidth
+                  slotProps={{
+                    htmlInput: {
+                      min: 1,
+                    },
+                  }}
+                />
+              </Box>
+            </form>
           )}
           {activeStep === 1 && (
             <Box>
@@ -202,7 +206,7 @@ const Buy = ({ stock, open, handleClose, type }) => {
               >
                 <Typography variant="body1">Purchase Amount:</Typography>
                 <Typography variant="body1">
-                  <strong>{formatCurr(totalPurchaseAmount)}</strong>
+                  <strong>{formatCurr(purchaseAmount)}</strong>
                 </Typography>
               </Box>
               <Box
@@ -242,7 +246,7 @@ const Buy = ({ stock, open, handleClose, type }) => {
           variant="h6"
           sx={{ fontWeight: "bold", color: "primary.main" }}
         >
-          Total: {formatCurr(totalPurchaseAmount + brokerage)}
+          Total: {formatCurr(total)}
         </Typography>
         <Box
           sx={{
@@ -258,7 +262,7 @@ const Buy = ({ stock, open, handleClose, type }) => {
             color="success"
             variant="contained"
             loadingPosition="start"
-            disabled={loading || portfolio.available < shares * stock.price}
+            disabled={loading || portfolio.available < total || shares < 1}
           >
             {loading ? (
               <CircularProgress
