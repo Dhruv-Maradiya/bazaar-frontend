@@ -9,7 +9,7 @@ const Dashboard = () => {
       <SearchBar />
       <StockList />
     </Box>
-  )
+  );
 };
 
 export default Dashboard;

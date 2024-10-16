@@ -31,8 +31,6 @@ import dynamic from "next/dynamic";
 
 const clientSideEmotionCache = createEmotionCache();
 
-
-
 // ** Pace Loader
 if (themeConfig.routingLoader) {
   let prev = "";
