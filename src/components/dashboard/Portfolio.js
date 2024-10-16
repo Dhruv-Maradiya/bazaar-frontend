@@ -24,8 +24,6 @@ import {
   Typography,
 } from "@mui/material";
 
-import ExpandMore from "@mui/icons-material/ExpandMore";
-
 import { useTheme } from "@mui/material/styles";
 import firebase from "firebase/compat/app";
 import moment from "moment";
