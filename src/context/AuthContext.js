@@ -35,7 +35,7 @@ const AuthProvider = ({ children }) => {
     try {
       const userCredential = await auth.signInWithEmailAndPassword(
         body.email,
-        body.password,
+        body.password
       );
 
       toast.success("Logged in successfully.");
@@ -80,3 +80,4 @@ const AuthProvider = ({ children }) => {
 };
 
 export { AuthContext, AuthProvider };
+

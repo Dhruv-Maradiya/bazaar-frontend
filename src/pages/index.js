@@ -1,7 +1,10 @@
 import Dashboard from "@/pages/dashboard";
 
+
 const StockList = ({ stocks: _stocks }) => {
-  return <Dashboard />;
+  return (
+    <Dashboard />
+  );
 };
 
 export default StockList;
