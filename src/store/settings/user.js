@@ -7,6 +7,7 @@ import {
   TransactionTypeMap,
   TransactionTypeMapSellMap,
 } from "@/utils/timestamp";
+import { convertToFloat } from "@/utils/format-number";
 
 // ** Buy Stock
 export const buyStock = createAsyncThunk(
@@ -52,11 +53,20 @@ export const buyStock = createAsyncThunk(
       }
 
       await db.runTransaction(async (transaction) => {
+        const newAvailable = convertToFloat(
+          currentPortfolio.available - price * shares - brokerage
+        );
+        const newInvested = convertToFloat(
+          currentPortfolio.invested + price * shares
+        );
+        const newTotal = convertToFloat(
+          newAvailable + newInvested + currentPortfolio.unrealized
+        );
+
         transaction.update(db.collection("users").doc(userId), {
-          available: firebase.firestore.FieldValue.increment(
-            -(price * shares + brokerage)
-          ),
-          invested: firebase.firestore.FieldValue.increment(price * shares),
+          available: newAvailable,
+          invested: newInvested,
+          total: newTotal,
           data: newData,
         });
 
@@ -125,18 +135,30 @@ export const sellStock = createAsyncThunk(
       }
 
       await db.runTransaction(async (transaction) => {
+        const newAvailable = convertToFloat(
+          currentPortfolio.available + price * shares - brokerage
+        );
+        const newInvested = convertToFloat(
+          currentPortfolio.invested - currentHoldings.price * shares
+        );
+        const newRealized = convertToFloat(
+          currentPortfolio.realized + profitOrLoss - brokerage
+        );
+        const newUnrealized = convertToFloat(
+          currentPortfolio.unrealized - profitOrLoss
+        );
+        const newTotal = convertToFloat(
+          newAvailable + newInvested + newUnrealized
+        );
+
         // Update portfolio
         transaction.update(db.collection("users").doc(userId), {
           data: newData,
-          available: firebase.firestore.FieldValue.increment(
-            price * shares - brokerage
-          ),
-          invested: firebase.firestore.FieldValue.increment(
-            currentHoldings.price * shares * -1
-          ),
-          realized: firebase.firestore.FieldValue.increment(profitOrLoss),
-          unrealized: firebase.firestore.FieldValue.increment(-profitOrLoss),
-          total: firebase.firestore.FieldValue.increment(profitOrLoss),
+          available: newAvailable,
+          invested: newInvested,
+          realized: newRealized,
+          unrealized: newUnrealized,
+          total: newTotal,
         });
 
         // Add new transaction to subcollection transaction of users
