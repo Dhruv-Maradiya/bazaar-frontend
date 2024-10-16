@@ -136,6 +136,7 @@ const StockList = ({ searchSymbols }) => {
             marginRight: {
               xs: "1.0rem",
             },
+
           }}
         >
           {stock.change > 0 ? "+" : ""}

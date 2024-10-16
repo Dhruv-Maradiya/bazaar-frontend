@@ -11,9 +11,9 @@ import {
   Pagination,
   Typography,
 } from "@mui/material";
-import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "@reduxjs/toolkit";
 import { memo } from "react";
+import { firestoreConnect } from "react-redux-firebase";
 
 const Dashboard = ({
   page,
@@ -57,6 +57,7 @@ const Dashboard = ({
                   searchSymbols={searchSymbols}
                 />
               </div>
+
               <Box
                 sx={{
                   display: "flex",
@@ -65,7 +66,7 @@ const Dashboard = ({
                 }}
               >
                 <Pagination
-                  count={Math.ceil((sortedAllStocks?.length || 0) / 10)}
+                  count={Math.ceil((sortedAllStocks?.length || 0) / 5)}
                   page={page}
                   onChange={(e, p) => setPage(p)}
                 />
@@ -122,7 +123,7 @@ export default compose(
     return [
       {
         collection: "stocks",
-        limit: 10,
+        limit: 5,
         orderBy: ["symbol"],
         where: props.searchSymbols
           ? ["symbol", "in", props.searchSymbols]
