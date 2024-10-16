@@ -26,7 +26,6 @@ import {
 } from "@mui/material";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import CloseIcon from "@mui/icons-material/Close";
 
 // Styles
 const styles = {
