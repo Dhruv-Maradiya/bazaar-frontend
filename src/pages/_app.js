@@ -1,5 +1,8 @@
 "use client";
 
+// ** React Imports
+import { useRef } from "react";
+
 // ** Next Imports
 import Head from "next/head";
 import { Router } from "next/router";
@@ -22,12 +25,13 @@ import GuestGuard from "@/@core/components/guards/GuestGuard";
 import FallbackSpinner from "@/@core/components/spinner";
 import WindowWrapper from "@/@core/components/window-wrapper";
 import themeConfig from "@/configs/themeConfig";
-import { AuthProvider } from "@/context/AuthContext";
+import { AuthConsumer, AuthProvider } from "@/context/AuthContext";
 import { SettingsConsumer, SettingsProvider } from "@/context/settingContext";
 import UserLayout from "@/layouts/UserLayout";
 import { createEmotionCache } from "@/utils/emotion-cache";
-import { ReactReduxFirebaseProvider } from "react-redux-firebase";
 import dynamic from "next/dynamic";
+import { ReactReduxFirebaseProvider } from "react-redux-firebase";
+import "../styles/globals.css";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -57,8 +61,11 @@ if (themeConfig.routingLoader) {
 function App(props) {
   const { Component, pageProps, emotionCache = clientSideEmotionCache } = props;
   const getLayout =
-    Component.getLayout ?? ((page) => <UserLayout>{page}</UserLayout>);
+    Component.getLayout ??
+    ((page) => <UserLayout drawerRef={drawerRef}>{page}</UserLayout>);
   const Guard = Component.guestGuard === true ? GuestGuard : AuthGuard;
+
+  const drawerRef = useRef(null);
 
   return (
     <Provider store={store}>
@@ -75,21 +82,32 @@ function App(props) {
               {({ settings }) => {
                 return (
                   <AuthProvider>
-                    <Guard fallback={<FallbackSpinner />}>
-                      <CustomAppProvider settings={settings}>
-                        <WindowWrapper>
-                          {getLayout(<Component {...pageProps} />)}
-                          <ReactHotToast>
-                            <Toaster
-                              position={settings.toastPosition}
-                              gutter={8}
-                              containerStyle={{ zIndex: 9999 }}
-                              toastOptions={{ duration: 3000 }}
-                            />
-                          </ReactHotToast>
-                        </WindowWrapper>
-                      </CustomAppProvider>
-                    </Guard>
+                    <AuthConsumer>
+                      {({ user }) => {
+                        return (
+                          <Guard fallback={<FallbackSpinner />}>
+                            <CustomAppProvider settings={settings} user={user}>
+                              <WindowWrapper>
+                                {getLayout(
+                                  <Component
+                                    {...pageProps}
+                                    drawerRef={drawerRef}
+                                  />,
+                                )}
+                                <ReactHotToast>
+                                  <Toaster
+                                    position={settings.toastPosition}
+                                    gutter={8}
+                                    containerStyle={{ zIndex: 9999 }}
+                                    toastOptions={{ duration: 3000 }}
+                                  />
+                                </ReactHotToast>
+                              </WindowWrapper>
+                            </CustomAppProvider>
+                          </Guard>
+                        );
+                      }}
+                    </AuthConsumer>
                   </AuthProvider>
                 );
               }}

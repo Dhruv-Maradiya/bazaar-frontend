@@ -11,24 +11,32 @@
     "format": "prettier --write \"src/**/*.{js,jsx}\""
   },
   "dependencies": {
+    "@emotion/cache": "^11.13.1",
     "@emotion/react": "^11.13.3",
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^6.1.1",
+    "@mui/lab": "6.0.0-beta.10",
     "@mui/material": "^6.1.1",
     "@mui/styles": "^6.1.1",
     "@mui/system": "^6.1.1",
     "@reduxjs/toolkit": "^2.2.7",
     "@toolpad/core": "^0.7.0",
+    "aos": "^2.3.4",
+    "currency-formatter": "^1.5.9",
     "firebase": "^10.13.2",
-    "firebase-tools": "^13.20.0",
+    "lightweight-charts": "^4.2.1",
+    "moment": "^2.30.1",
     "next": "14.2.13",
     "nprogress": "^0.2.0",
     "react": "^18",
+    "react-apexcharts": "^1.4.1",
     "react-dom": "^18",
+    "react-fast-marquee": "^1.6.5",
     "react-hot-toast": "^2.4.1",
     "react-redux": "^9.1.2",
     "react-redux-firebase": "^3.11.0",
+    "react-resize-detector": "^11.0.1",
     "redux-firestore": "^2.0.1"
   },
   "yarn": {
@@ -37,7 +45,13 @@
     }
   },
   "devDependencies": {
-    "eslint": "^8",
-    "eslint-config-next": "14.2.13"
+    "eslint": "^8.57.1",
+    "eslint-config-next": "14.2.13",
+    "prettier": "^3.3.3"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@toolpad/core@0.7.0": "patches/@toolpad__core@0.7.0.patch"
+    }
   }
 }
