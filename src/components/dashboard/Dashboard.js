@@ -131,5 +131,5 @@ export default compose(
         storeAs: "dashboardStocks",
       },
     ];
-  }),
+  })
 )(memo(Dashboard));

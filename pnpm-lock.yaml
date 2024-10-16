@@ -1283,6 +1283,10 @@ packages:
   apexcharts@3.54.1:
     resolution: {integrity: sha512-E4et0h/J1U3r3EwS/WlqJCQIbepKbp6wGUmaAwJOMjHUP4Ci0gxanLa7FR3okx6p9coi4st6J853/Cb1NP0vpA==}
 
+
+  apexcharts@3.54.1:
+    resolution: {integrity: sha512-E4et0h/J1U3r3EwS/WlqJCQIbepKbp6wGUmaAwJOMjHUP4Ci0gxanLa7FR3okx6p9coi4st6J853/Cb1NP0vpA==}
+
   arch@2.2.0:
     resolution: {integrity: sha512-Of/R0wqp83cgHozfIYLbBMnej79U/SVGOOyuB3VVFv1NRM/PSFMK12x9KVtiYzJqmnU5WR2qp0Z5rHb7sWGnFQ==}
 
@@ -4390,6 +4394,12 @@ snapshots:
       lodash.debounce: 4.0.8
       lodash.throttle: 4.1.1
 
+  aos@2.3.4:
+    dependencies:
+      classlist-polyfill: 1.2.0
+      lodash.debounce: 4.0.8
+      lodash.throttle: 4.1.1
+
   apexcharts@3.54.1:
     dependencies:
       '@yr/monotone-cubic-spline': 1.0.3
@@ -4399,6 +4409,7 @@ snapshots:
       svg.pathmorphing.js: 0.1.3
       svg.resize.js: 1.4.3
       svg.select.js: 3.0.1
+
 
   arch@2.2.0: {}
 

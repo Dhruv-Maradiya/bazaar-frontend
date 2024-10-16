@@ -124,7 +124,6 @@ const StockList = ({ searchSymbols }) => {
       >
         <Typography
           sx={{
-            color: stock.change > 0 ? green[700] : red[700],
             fontWeight: 500,
             fontSize: {
               xs: "0.875rem",

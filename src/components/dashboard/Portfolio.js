@@ -26,6 +26,7 @@ import {
 } from "@mui/material";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import CloseIcon from "@mui/icons-material/Close";
 
 // Styles
 const styles = {
@@ -147,7 +148,7 @@ const TransactionRow = ({ purchase }) => (
   <TableRow>
     <TableCell>
       {moment(convertFirebaseTimestampToDate(purchase.createdAt)).format(
-        "DD MMM YYYY, hh:mm A",
+        "DD MMM YYYY, hh:mm A"
       )}
     </TableCell>
     <TableCell align="right">{formatCurr(purchase.price)}</TableCell>
@@ -205,17 +206,17 @@ const PortfolioDetails = ({ portfolio, open, onClose }) => {
                 key={`${portfolioStock.stock.id}-${portfolioStock.type}`}
                 portfolioStock={portfolioStock}
                 expanded={expandedStock.includes(
-                  `${portfolioStock.stock.id}-${portfolioStock.type}`,
+                  `${portfolioStock.stock.id}-${portfolioStock.type}`
                 )}
                 onToggle={() =>
                   toggleStockExpansion(
                     portfolioStock,
                     expandedStock,
-                    setExpandedStock,
+                    setExpandedStock
                   )
                 }
                 stockData={portfolioStocks.find(
-                  (s) => s.id === portfolioStock.stock.id,
+                  (s) => s.id === portfolioStock.stock.id
                 )}
                 transactions={filterTransactions(transactions, portfolioStock)}
               />
@@ -244,7 +245,7 @@ const PortfolioSummary = ({ portfolio }) => (
           label={label}
           value={portfolio?.[label.toLowerCase().replace(" p/l", "")]}
         />
-      ),
+      )
     )}
   </Box>
 );
@@ -354,7 +355,7 @@ const calculateGainPercent = (portfolioStock, stockData) => {
 const fetchPortfolioData = async (
   portfolio,
   setPortfolioStocks,
-  setTransactions,
+  setTransactions
 ) => {
   if (!portfolio.data || portfolio.data.length === 0) {
     setPortfolioStocks([]);
@@ -368,7 +369,7 @@ const fetchPortfolioData = async (
       .where(
         firebase.firestore.FieldPath.documentId(),
         "in",
-        portfolio.data.map((stock) => stock.stock.id),
+        portfolio.data.map((stock) => stock.stock.id)
       )
       .get(),
     firestore
@@ -385,11 +386,11 @@ const fetchPortfolioData = async (
 const toggleStockExpansion = (
   portfolioStock,
   expandedStock,
-  setExpandedStock,
+  setExpandedStock
 ) => {
   const rowId = `${portfolioStock.stock.id}-${portfolioStock.type}`;
   setExpandedStock((prev) =>
-    prev.includes(rowId) ? prev.filter((id) => id !== rowId) : [...prev, rowId],
+    prev.includes(rowId) ? prev.filter((id) => id !== rowId) : [...prev, rowId]
   );
 };
 
@@ -397,7 +398,7 @@ const filterTransactions = (transactions, portfolioStock) =>
   transactions.filter(
     (t) =>
       t.stock.id === portfolioStock.stock.id &&
-      TransactionTypeMapBuyMap[portfolioStock.type].includes(t.type),
+      TransactionTypeMapBuyMap[portfolioStock.type].includes(t.type)
   );
 
 export default Portfolio;
