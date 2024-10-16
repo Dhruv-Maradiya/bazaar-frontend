@@ -23,8 +23,7 @@ import {
 import { unwrapResult } from "@reduxjs/toolkit";
 import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const steps = ["Enter Details", "Confirm Sale"];
 
@@ -69,9 +68,8 @@ const Sell = ({ stock, open, handleClose, type }) => {
           userId: portfolio.id,
           price: stock.price,
           profitOrLoss: profitLoss,
-        }),
           brokerage,
-        })
+        }),
       );
 
       unwrapResult(results);

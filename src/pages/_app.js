@@ -35,8 +35,6 @@ import "../styles/globals.css";
 
 const clientSideEmotionCache = createEmotionCache();
 
-
-
 // ** Pace Loader
 if (themeConfig.routingLoader) {
   let prev = "";

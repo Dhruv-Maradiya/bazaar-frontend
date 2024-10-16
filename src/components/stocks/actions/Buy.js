@@ -2,10 +2,11 @@ import { buyStock } from "@/store/settings/user";
 import { formatCurr } from "@/utils/format-number";
 import { TransactionTypeMap } from "@/utils/timestamp";
 import CloseIcon from "@mui/icons-material/Close";
-import LoadingButton from "@mui/lab/LoadingButton";
 import {
   Alert,
   Box,
+  Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -16,11 +17,9 @@ import {
   Stepper,
   TextField,
   Typography,
-  Button,
-  CircularProgress,
 } from "@mui/material";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const steps = ["Enter Details", "Confirm Purchase"];
@@ -66,9 +65,8 @@ const Buy = ({ stock, open, handleClose, type }) => {
             type,
             userId: portfolio.id,
             price: stock.price,
-          }),
             brokerage: brokerage,
-          })
+          }),
         );
 
         unwrapResult(results);
