@@ -24,7 +24,6 @@ import {
   Typography,
 } from "@mui/material";
 
-import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 
 import { useTheme } from "@mui/material/styles";
