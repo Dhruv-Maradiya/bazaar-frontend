@@ -1,14 +1,18 @@
 import Search from "@mui/icons-material/Search";
 import { InputAdornment, TextField } from "@mui/material";
-import { Box } from "@mui/system";
+import { Box, useTheme, useMediaQuery } from "@mui/system";
 
 const Searchbar = ({ value: search, onChange: setSearch }) => {
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <Box
       sx={{
         marginTop: "80px",
         display: "flex",
         justifyContent: "center",
+        padding: isSmallScreen ? "0 16px" : "0", // Add padding for small screens
       }}
     >
       <TextField
@@ -19,11 +23,7 @@ const Searchbar = ({ value: search, onChange: setSearch }) => {
           input: {
             startAdornment: (
               <InputAdornment position="start">
-                <Search
-                  sx={{
-                    color: (theme) => theme.palette.text.primary,
-                  }}
-                />
+                <Search sx={{ color: (theme) => theme.palette.text.primary }} />
               </InputAdornment>
             ),
           },
@@ -40,7 +40,7 @@ const Searchbar = ({ value: search, onChange: setSearch }) => {
           backgroundColor: (theme) => theme.palette.background.paper,
           borderRadius: 12,
           boxShadow: 2,
-          maxWidth: 600,
+          maxWidth: isSmallScreen ? '100%' : 600,
           margin: "0 auto",
           border: "none",
           "& .MuiOutlinedInput-notchedOutline": {

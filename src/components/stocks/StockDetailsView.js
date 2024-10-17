@@ -190,7 +190,7 @@ const StockDetailsView = ({ stockId, drawerRef }) => {
                 alignItems: "center",
               }}
             >
-              <Typography variant="h5" fontWeight="600">
+              <Typography sx={{ color: (theme) => theme.palette.mode == 'dark' ? theme.palette.text.primary : 'black', }} variant="h5" fontWeight="600">
                 {formatCurr(stock.price)}
               </Typography>
               <Chip

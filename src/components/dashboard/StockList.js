@@ -1,6 +1,5 @@
 import { Chip, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-
 import { formatCurr, formatPercent } from "@/utils/format-number";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
@@ -43,12 +42,18 @@ const StockList = ({ searchSymbols }) => {
             : null,
         padding: "12px 0",
         display: "flex",
-        alignItems: "center",
+        flexDirection: {
+          xs: "column",
+          sm: "row",
+        },
       }}
     >
       <Box
         sx={{
-          flex: 0.4,
+          flex: {
+            xs: 'none',
+            sm: 0.4,
+          },
           display: "flex",
           alignItems: "center",
           gap: 1,
@@ -65,27 +70,53 @@ const StockList = ({ searchSymbols }) => {
             backgroundColor: "#76b82a",
             color: (theme) => theme.palette.common.white,
             borderRadius: 1,
+            display: { xs: 'none', sm: 'block' },
           }}
         />
         <Typography variant="subtitle1">{stock.name}</Typography>
       </Box>
+
       <Box
         sx={{
-          flex: 0.2,
+          flex: {
+            xs: 'none',
+            sm: 0.2,
+          },
+          textAlign: {
+            xs: 'left',
+            sm: 'left',
+          },
+          marginTop: { xs: 1, sm: 0 },
         }}
       >
-        <Typography
-          variant="body1"
-          sx={{
-            fontWeight: 800,
-          }}
-        >
+        <Typography variant="body1" sx={{
+          color: (theme) => theme.palette.mode == 'dark' ? theme.palette.text.primary : 'black',
+          fontWeight: 800
+        }}>
           {formatCurr(stock.price)}
         </Typography>
       </Box>
+
       <Box
         sx={{
-          flex: 0.2,
+          flexDirection: {
+            xs: 'row',
+            sm: 'column',
+            lg: "row",
+          },
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: {
+            xs: 'space-between',
+            sm: 'flex-start',
+          },
+          marginTop: { xs: '4px', sm: '0' },
+          position: {
+            lg: "absolute",
+          },
+          right: {
+            lg: "35rem"
+          }
         }}
       >
         <Typography
@@ -98,47 +129,41 @@ const StockList = ({ searchSymbols }) => {
                 : theme.palette.mode === "dark"
                   ? red[400]
                   : red[600],
+            marginRight: { xs: '8px', sm: '0' },
+            textAlign: 'left',
+            flexGrow: 1,
           }}
         >
           {stock.change > 0 ? "+" : ""}
           {formatCurr(stock.change)}
         </Typography>
-      </Box>
-      <Box
-        sx={{
-          flex: 0.1,
-          display: "flex",
-          alignItems: "center",
-          backgroundColor: stock.change > 0 ? green[50] : red[50],
-          borderRadius: 1,
-          padding: "4px 8px",
-        }}
-      >
-        {stock.change > 0 ? (
-          <ArrowUpwardIcon
-            color="success"
-            fontSize="small"
-            sx={{
-              fontWeight: 600,
-            }}
-          />
-        ) : (
-          <ArrowDownwardIcon
-            color="error"
-            fontSize="small"
-            sx={{
-              fontWeight: 500,
-            }}
-          />
-        )}
-        <Typography
+
+        <Box
           sx={{
-            color: stock.change > 0 ? green[700] : red[700],
-            fontWeight: 500,
-          }}
-        >
-          {formatPercent(stock.changePercent)}
-        </Typography>
+            display: 'flex',
+            alignItems: 'center',
+            backgroundColor: stock.change > 0 ? green[50] : red[50],
+            borderRadius: 1,
+            padding: "4px 8px",
+            marginLeft: {
+              lg: "2rem",
+            }
+          }}>
+          {stock.change > 0 ? (
+            <ArrowUpwardIcon color="success" fontSize="small" />
+          ) : (
+            <ArrowDownwardIcon color="error" fontSize="small" />
+          )}
+          <Typography
+            sx={{
+              color: stock.change > 0 ? green[700] : red[700],
+              fontWeight: 500,
+              marginLeft: '4px',
+            }}
+          >
+            {formatPercent(stock.changePercent)}
+          </Typography>
+        </Box>
       </Box>
     </Box>
   ));

@@ -337,6 +337,7 @@ const PortfolioSummary = ({ portfolio }) => (
       alignItems: "center",
       mb: 2,
       flexDirection: "column",
+      color: (theme) => theme.palette.mode == 'dark' ? theme.palette.text.primary : 'black',
     }}
   >
     {["Invested", "Available", "Realized P/L", "Unrealized P/L"].map(
@@ -360,8 +361,8 @@ const SummaryRow = ({ label, value }) => (
       width: "100%",
     }}
   >
-    <Typography variant="body1">{label}:</Typography>
-    <Typography variant="body1" sx={{ fontWeight: 600 }}>
+    <Typography sx={{ color: (theme) => theme.palette.mode == 'dark' ? theme.palette.text.primary : 'black', }} variant="body1">{label}:</Typography>
+    <Typography variant="body1" sx={{ color: (theme) => theme.palette.mode == 'dark' ? theme.palette.text.primary : 'black', fontWeight: 600 }}>
       {formatCurr(value)}
     </Typography>
   </Box>
@@ -386,7 +387,7 @@ const Portfolio = () => {
           </Typography>
         </Box>
       </Box>
-      <Typography variant="h4" gutterBottom>
+      <Typography sx={{ color: (theme) => theme.palette.mode == 'dark' ? theme.palette.text.primary : 'black', }} variant="h4" gutterBottom>
         {formatCurr(portfolio?.total)}
       </Typography>
       <PortfolioSummary portfolio={portfolio} />
