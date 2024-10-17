@@ -62,7 +62,7 @@ export default function LeaderBoard() {
         .where("disabled", "==", false)
         .where("eligibleForLeaderBoard", "==", true)
         .orderBy("total", "desc")
-        .limit(10)
+        .limit(20)
         .get();
       const data = leaderBoard.docs.map((doc) => doc.data());
       setLeaderBoardData(data);
