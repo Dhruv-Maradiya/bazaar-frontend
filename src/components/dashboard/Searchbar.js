@@ -40,8 +40,14 @@ const Searchbar = ({ value: search, onChange: setSearch }) => {
           backgroundColor: (theme) => theme.palette.background.paper,
           borderRadius: 12,
           boxShadow: 2,
-          maxWidth: 600,
-          margin: "0 auto",
+          maxWidth: {
+            xs: 350,
+            lg: 600,
+          },
+          margin: {
+            lg: "0 auto",
+            xs: "0 17% 0 0"
+          },
           border: "none",
           "& .MuiOutlinedInput-notchedOutline": {
             borderColor: "transparent",
