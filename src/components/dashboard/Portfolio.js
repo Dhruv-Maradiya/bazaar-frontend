@@ -243,13 +243,15 @@ const PortfolioDetails = ({ portfolio, open, onClose }) => {
     fetchPortfolioData(portfolio, setPortfolioStocks, setTransactions);
   }, [portfolio, open]);
 
-  if (!portfolio || !portfolio.data || portfolio.data.length === 0) {
+  const noContent = (
+    <Typography variant="body1">No stocks in your portfolio</Typography>
+  );
+
+  if (!portfolio) {
     return (
       <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
         <DialogTitle>Portfolio Details</DialogTitle>
-        <DialogContent>
-          <Typography variant="body1">No stocks in your portfolio</Typography>
-        </DialogContent>
+        <DialogContent>{noContent}</DialogContent>
       </Dialog>
     );
   }
@@ -276,54 +278,58 @@ const PortfolioDetails = ({ portfolio, open, onClose }) => {
         }}
       >
         <PortfolioChart history={portfolio?.history || []} />
-        <TableContainer
-          sx={{
-            overflowX: "auto",
-            // Hide scrollbar
-            "&::-webkit-scrollbar": {
-              display: "none",
-            },
-            msOverflowStyle: "none",
-            scrollbarWidth: "none",
-            p: 2,
-          }}
-        >
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>SYMBOL NAME</TableCell>
-                <TableCell>PURCHASE PRICE</TableCell>
-                <TableCell>PRICE</TableCell>
-                <TableCell>QUANTITY</TableCell>
-                <TableCell>GAIN</TableCell>
-                <TableCell>VALUE</TableCell>
-                <TableCell>TYPE</TableCell>
-                <TableCell padding="none"></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {portfolio.data.map((portfolioStock) => (
-                <StockRow
-                  key={`${portfolioStock.stock.id}-${portfolioStock.type}`}
-                  portfolioStock={portfolioStock}
-                  expanded={expandedStock.includes(
-                    `${portfolioStock.stock.id}-${portfolioStock.type}`
-                  )}
-                  onToggle={() =>
-                    toggleStockExpansion(portfolioStock, setExpandedStock)
-                  }
-                  stockData={portfolioStocks.find(
-                    (s) => s.id === portfolioStock.stock.id
-                  )}
-                  transactions={filterTransactions(
-                    transactions,
-                    portfolioStock
-                  )}
-                />
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        {!portfolio || !portfolio.data || portfolio.data.length === 0 ? (
+          noContent
+        ) : (
+          <TableContainer
+            sx={{
+              overflowX: "auto",
+              // Hide scrollbar
+              "&::-webkit-scrollbar": {
+                display: "none",
+              },
+              msOverflowStyle: "none",
+              scrollbarWidth: "none",
+              p: 2,
+            }}
+          >
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>SYMBOL NAME</TableCell>
+                  <TableCell>PURCHASE PRICE</TableCell>
+                  <TableCell>PRICE</TableCell>
+                  <TableCell>QUANTITY</TableCell>
+                  <TableCell>GAIN</TableCell>
+                  <TableCell>VALUE</TableCell>
+                  <TableCell>TYPE</TableCell>
+                  <TableCell padding="none"></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {portfolio.data.map((portfolioStock) => (
+                  <StockRow
+                    key={`${portfolioStock.stock.id}-${portfolioStock.type}`}
+                    portfolioStock={portfolioStock}
+                    expanded={expandedStock.includes(
+                      `${portfolioStock.stock.id}-${portfolioStock.type}`
+                    )}
+                    onToggle={() =>
+                      toggleStockExpansion(portfolioStock, setExpandedStock)
+                    }
+                    stockData={portfolioStocks.find(
+                      (s) => s.id === portfolioStock.stock.id
+                    )}
+                    transactions={filterTransactions(
+                      transactions,
+                      portfolioStock
+                    )}
+                  />
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
       </DialogContent>
     </Dialog>
   );
