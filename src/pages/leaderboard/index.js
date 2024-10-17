@@ -19,7 +19,7 @@ import {
 import { green, red, blue } from "@mui/material/colors";
 import { db as firestore } from "@/lib/firebase/init";
 import { useEffect, useState } from "react";
-import toast, from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 
 const CustomChip = ({ children, ...props }) => {
