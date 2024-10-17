@@ -16,7 +16,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { green, red } from "@mui/material/colors";
+import { green, red, blue } from "@mui/material/colors";
 import { db as firestore } from "@/lib/firebase/init";
 import { useEffect, useState } from "react";
 
@@ -78,27 +78,30 @@ export default function LeaderBoard() {
     <Container
       sx={{
         marginY: 4,
+        padding: '16px',
+        backgroundColor: '#f5f5f5',
+        borderRadius: '8px',
+        boxShadow: '0px 4px 20px rgba(0,0,0,0.1)',
       }}
     >
-      <Card>
+      <Card variant="outlined" sx={{ borderRadius: '8px' }}>
         <CardContent>
           <Typography
             variant="h4"
             textAlign="center"
-            sx={{ p: 2, fontWeight: "bold" }}
-            color="primary"
+            sx={{ p: 2, fontWeight: "bold", color: blue[700] }}
           >
-            Investor Leaderboard
+            🏆 Investor Leaderboard 🏆
           </Typography>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell sx={{ fontWeight: "bold" }}>Rank</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
-                <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                <TableCell sx={{ fontWeight: "bold", color: blue[600] }}>Rank</TableCell>
+                <TableCell sx={{ fontWeight: "bold", color: blue[600] }}>Name</TableCell>
+                <TableCell align="right" sx={{ fontWeight: "bold", color: blue[600] }}>
                   Portfolio Value
                 </TableCell>
-                <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                <TableCell align="right" sx={{ fontWeight: "bold", color: blue[600] }}>
                   Change
                 </TableCell>
               </TableRow>
@@ -122,29 +125,44 @@ export default function LeaderBoard() {
                     <TableCell component="th" scope="row">
                       <Box
                         sx={{
-                          width: 30,
-                          height: 30,
-                          borderRadius: "50%",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          backgroundColor: "primary.main",
-                          color: "white",
-                          fontWeight: "bold",
-                          animation: `${pulseAnimation} 2s infinite`,
+                          display: 'flex',
+                          alignItems: 'center',
                         }}
                       >
-                        {index + 1}
+                        {index < 5 && (
+                          <Typography variant="body2" color="gold" sx={{ mr: 1 }}>
+                            ⭐️
+                          </Typography>
+                        )}
+                        <Box
+                          sx={{
+                            width: '30px',
+                            height: '30px',
+                            borderRadius: '50%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: 'primary.main',
+                            color: 'white',
+                            fontWeight: 'bold',
+                            animation:
+                              index === 0 ? `${pulseAnimation} 2s infinite` : 'none',
+                          }}
+                        >
+                          {index + 1}
+                        </Box>
                       </Box>
                     </TableCell>
                     <TableCell>
                       <Box sx={{ display: "flex", alignItems: "center" }}>
-                        <Avatar
-                          src={row.avatar}
-                          alt={row.name}
-                          sx={{ mr: 2 }}
-                        />
-                        {row.name}
+                        <Avatar src={row.avatar} alt={row.name} sx={{ mr: 2 }} />
+                        <Typography sx={{
+                          animation: index < 3 ? `${pulseAnimation} 2s infinite` : 'none',
+                          fontWeight: 'bold',
+                          color: index < 3 ? "#ef233c" : "black",
+                        }}>
+                          {row.name}
+                        </Typography>
                       </Box>
                     </TableCell>
                     <TableCell align="right">
@@ -193,9 +211,9 @@ export default function LeaderBoard() {
       <Typography
         variant="caption"
         textAlign="center"
-        sx={{ mt: 2, display: "block" }}
+        sx={{ mt: 2, display: "block", color: blue[500] }}
       >
-        Note: Data updates every 5 seconds
+        Note: Data updates every few seconds.
       </Typography>
     </Container>
   );
