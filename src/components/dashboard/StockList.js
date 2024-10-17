@@ -89,7 +89,10 @@ const StockList = ({ searchSymbols }) => {
           marginTop: { xs: 1, sm: 0 },
         }}
       >
-        <Typography variant="body1" sx={{ fontWeight: 800 }}>
+        <Typography variant="body1" sx={{
+          color: (theme) => theme.palette.mode == 'dark' ? theme.palette.text.primary : 'black',
+          fontWeight: 800
+        }}>
           {formatCurr(stock.price)}
         </Typography>
       </Box>
@@ -142,8 +145,8 @@ const StockList = ({ searchSymbols }) => {
             backgroundColor: stock.change > 0 ? green[50] : red[50],
             borderRadius: 1,
             padding: "4px 8px",
-            marginLeft:{
-              lg:"2rem",
+            marginLeft: {
+              lg: "2rem",
             }
           }}>
           {stock.change > 0 ? (
