@@ -81,6 +81,7 @@ export const buyStock = createAsyncThunk(
             type: type, // BUY or SHORT SELL
             // Reference to stock document
             stock: db.collection("stocks").doc(stockId),
+            brokerage,
           }
         );
       });
@@ -135,9 +136,19 @@ export const sellStock = createAsyncThunk(
       }
 
       await db.runTransaction(async (transaction) => {
-        const newAvailable = convertToFloat(
-          currentPortfolio.available + price * shares - brokerage
-        );
+        // const newAvailable = convertToFloat(
+        //   currentPortfolio.available +
+        //     price * shares * (type === "SQUARE OFF" ? -1 : 1) -
+        //     brokerage
+        // );
+
+        let newAvailable =
+          currentPortfolio.available +
+          currentHoldings.price * shares -
+          brokerage;
+
+        newAvailable += profitOrLoss;
+
         const newInvested = convertToFloat(
           currentPortfolio.invested - currentHoldings.price * shares
         );
@@ -172,6 +183,15 @@ export const sellStock = createAsyncThunk(
             type: type, // BUY or SHORT SELL
             // Reference to stock document
             stock: db.collection("stocks").doc(stockId),
+            brokerage,
+            currentPortfolio: {
+              available: newAvailable,
+              invested: newInvested,
+            },
+            previousPortfolio: {
+              available: currentPortfolio.available,
+              invested: currentPortfolio.invested,
+            },
           }
         );
       });
