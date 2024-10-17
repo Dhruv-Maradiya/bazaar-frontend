@@ -44,6 +44,11 @@ const StockList = ({ searchSymbols }) => {
         padding: "12px 0",
         display: "flex",
         alignItems: "center",
+        flexDirection: {
+          xs: 'row',  // Keep it in a row for mobile
+          sm: 'row'   // Maintain row layout for larger screens
+        },
+        justifyContent: "space-between", // Distribute space between items
       }}
     >
       <Box
@@ -53,6 +58,8 @@ const StockList = ({ searchSymbols }) => {
           alignItems: "center",
           gap: 1,
           cursor: "pointer",
+          width: '100%', // Make it responsive
+          justifyContent: "space-between", // Ensure space between items
         }}
         onClick={() => {
           router.push(`/stocks/${stock.id}`);
@@ -65,19 +72,43 @@ const StockList = ({ searchSymbols }) => {
             backgroundColor: "#76b82a",
             color: (theme) => theme.palette.common.white,
             borderRadius: 1,
+            display: {
+              xs: 'none',
+            }
           }}
         />
-        <Typography variant="subtitle1">{stock.name}</Typography>
+        <Typography
+          sx={{
+            fontSize: {
+              xs: "0.875rem"
+            },
+            whiteSpace: 'nowrap' // Prevent text from wrapping
+          }}
+          variant="subtitle1"
+        >
+          {stock.name}
+        </Typography>
       </Box>
       <Box
         sx={{
           flex: 0.2,
+          display: 'flex',
+          justifyContent: 'flex-end', // Align price to the right
         }}
       >
         <Typography
           variant="body1"
           sx={{
-            fontWeight: 800,
+            fontWeight: {
+              xs: 900,
+              lg: 800
+            },
+            fontSize: {
+              xs: "0.875rem",
+            },
+            marginLeft: {
+              xs: "1rem",
+            }
           }}
         >
           {formatCurr(stock.price)}
@@ -86,6 +117,8 @@ const StockList = ({ searchSymbols }) => {
       <Box
         sx={{
           flex: 0.2,
+          display: 'flex',
+          justifyContent: 'flex-end', // Align change to the right
         }}
       >
         <Typography
@@ -98,6 +131,12 @@ const StockList = ({ searchSymbols }) => {
                 : theme.palette.mode === "dark"
                   ? red[400]
                   : red[600],
+            fontSize: {
+              xs: "0.875rem"
+            },
+            marginLeft: {
+              xs: "2rem",
+            }
           }}
         >
           {stock.change > 0 ? "+" : ""}
@@ -112,6 +151,9 @@ const StockList = ({ searchSymbols }) => {
           backgroundColor: stock.change > 0 ? green[50] : red[50],
           borderRadius: 1,
           padding: "4px 8px",
+          marginLeft: {
+            xs: "1rem",
+          }
         }}
       >
         {stock.change > 0 ? (
@@ -120,6 +162,9 @@ const StockList = ({ searchSymbols }) => {
             fontSize="small"
             sx={{
               fontWeight: 600,
+              fontSize: {
+                xs: "0.875rem"
+              },
             }}
           />
         ) : (
@@ -128,6 +173,9 @@ const StockList = ({ searchSymbols }) => {
             fontSize="small"
             sx={{
               fontWeight: 500,
+              fontSize: {
+                xs: "0.875rem"
+              },
             }}
           />
         )}
@@ -135,6 +183,9 @@ const StockList = ({ searchSymbols }) => {
           sx={{
             color: stock.change > 0 ? green[700] : red[700],
             fontWeight: 500,
+            fontSize: {
+              xs: "0.875rem"
+            },
           }}
         >
           {formatPercent(stock.changePercent)}

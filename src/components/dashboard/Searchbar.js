@@ -46,7 +46,7 @@ const Searchbar = ({ value: search, onChange: setSearch }) => {
           },
           margin: {
             lg: "0 auto",
-            xs: "0 17% 0 0"
+            xs: "0 9% 0 0"
           },
           border: "none",
           "& .MuiOutlinedInput-notchedOutline": {

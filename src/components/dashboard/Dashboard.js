@@ -49,11 +49,11 @@ const Dashboard = ({
               >
                 <Typography variant="h6">All Stocks</Typography>
               </Box>
-              <StockList
-                pageNumber={page}
-                startAt={sortedAllStocks[(page - 1) * 5]}
-                searchSymbols={searchSymbols}
-              />
+                <StockList
+                  pageNumber={page}
+                  startAt={sortedAllStocks[(page - 1) * 5]}
+                  searchSymbols={searchSymbols}
+                />
               <Box
                 sx={{
                   display: "flex",
