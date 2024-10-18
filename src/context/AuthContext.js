@@ -132,7 +132,6 @@ const AuthProviderComposed = compose(
   firestoreConnect(() => [
     {
       collection: "news",
-      limit: 5,
       orderBy: ["releaseAt", "desc"],
       where: ["visible", "==", true],
       storeAs: "dashboardNews",

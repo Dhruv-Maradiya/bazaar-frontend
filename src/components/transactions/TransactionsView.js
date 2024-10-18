@@ -6,6 +6,7 @@ import {
 import TrendingDown from "@mui/icons-material/TrendingDown";
 import TrendingUp from "@mui/icons-material/TrendingUp";
 import {
+  Avatar,
   Box,
   Chip,
   Paper,
@@ -75,6 +76,10 @@ const TransactionsView = () => {
                       (stock) => stock.id === transaction.stock.id
                     );
 
+                    if (!stock) {
+                      return null;
+                    }
+
                     return (
                       <TableRow key={transaction.id}>
                         <TableCell>
@@ -88,18 +93,11 @@ const TransactionsView = () => {
                               router.push(`/stocks/${stock.id}`);
                             }}
                           >
-                            <Box
-                              component="span"
-                              sx={{
-                                backgroundColor: "#76b82a",
-                                color: "white",
-                                padding: "2px 8px",
-                                borderRadius: "4px",
-                                marginRight: "8px",
-                              }}
-                            >
-                              {stock.symbol}
-                            </Box>
+                            <Avatar
+                              src={`/images/stocks/${stock.id}.png`}
+                              alt={stock.name}
+                              sx={{ mr: 1 }}
+                            />
                             {stock.name}
                           </Box>
                         </TableCell>

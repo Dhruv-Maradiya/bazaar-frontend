@@ -32,11 +32,19 @@ const Dashboard = ({
       }}
     >
       <Searchbar value={search} onChange={(val) => setSearch(val)} />
-      <Grid2 container spacing={3}>
-        <Grid2
-          size={{
-            xs: 12,
-            md: 8,
+      <Box
+        sx={{
+          display: "flex",
+          gap: 3,
+          flexWrap: "wrap",
+        }}
+      >
+        <Box
+          sx={{
+            flex: {
+              xs: 1,
+              lg: 0.66,
+            },
           }}
         >
           <Card>
@@ -69,11 +77,13 @@ const Dashboard = ({
               </Box>
             </CardContent>
           </Card>
-        </Grid2>
-        <Grid2
-          size={{
-            xs: 12,
-            md: 4,
+        </Box>
+        <Box
+          sx={{
+            flex: {
+              xs: 1,
+              lg: 0.33,
+            },
           }}
         >
           <Card>
@@ -81,12 +91,24 @@ const Dashboard = ({
               <Portfolio />
             </CardContent>
           </Card>
-        </Grid2>
-        <Grid2 size={{ xs: 12, md: 8 }}>
+        </Box>
+        <div
+          style={{
+            flexBasis: "100%",
+          }}
+        ></div>
+        <Box
+          sx={{
+            flex: {
+              xs: 1,
+              lg: 0.8,
+            },
+          }}
+        >
           <Box
             sx={{
               display: "flex",
-              justifyContent: "center",
+              justifyContent: "flex-start",
               gap: 3,
               flexDirection: "column",
             }}
@@ -94,8 +116,8 @@ const Dashboard = ({
             <Typography variant="h6">News</Typography>
             <News />
           </Box>
-        </Grid2>
-      </Grid2>
+        </Box>
+      </Box>
     </Box>
   );
 };

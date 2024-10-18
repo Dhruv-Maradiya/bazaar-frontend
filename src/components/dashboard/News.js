@@ -1,78 +1,96 @@
-import { convertFirebaseTimestampToDate } from "@/utils/timestamp";
-import { Box, Card, CardContent, Typography } from "@mui/material";
-import moment from "moment";
-import Link from "next/link";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { Box, Card, CardContent, Typography } from "@mui/material";
+import Link from "next/link";
+import moment from "moment";
+import { convertFirebaseTimestampToDate } from "@/utils/timestamp";
 
-const News = () => {
-  //   const news = [];
-  const news = useSelector((state) => state.firestore.data.dashboardNews);
+const NewsItem = ({ title, releaseAt, description, source }) => {
+  const [newsSince, setNewsSince] = useState(
+    moment(convertFirebaseTimestampToDate(releaseAt)).fromNow()
+  );
 
-  if (!news || Object.keys(news).length === 0)
-    return (
-      <Card
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <CardContent>No news found!</CardContent>
-      </Card>
-    );
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNewsSince(moment(convertFirebaseTimestampToDate(releaseAt)).fromNow());
+    }, 10000);
 
-  const newsArray = Object.keys(news).map((key) => ({
-    id: key,
-    ...news[key],
-  }));
+    return () => clearInterval(interval);
+  }, [releaseAt]);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 2,
-      }}
-    >
-      {newsArray
-        ?.sort((a, b) => {
-          const aDate = convertFirebaseTimestampToDate(a.releaseAt);
-          const bDate = convertFirebaseTimestampToDate(b.releaseAt);
-          return bDate - aDate;
-        })
-        ?.map((item) => (
-          <Card key={item.id}>
-            <CardContent>
-              <Box>
-                <Typography variant="h6">{item.title}</Typography>
-                <Typography variant="caption">
-                  {moment(
-                    convertFirebaseTimestampToDate(item.releaseAt)
-                  ).fromNow()}
-                </Typography>
-              </Box>
-              <Typography variant="body1">{item.description}</Typography>
-              {item.source && (
-                <Link
-                  href={item.source}
-                  target="_blank"
-                  style={{ textDecoration: "none" }}
-                >
-                  <Typography
-                    variant="caption"
-                    color="primary"
-                    sx={{
-                      cursor: "pointer",
-                      textDecoration: "none !important",
-                    }}
-                  >
-                    View Sources
-                  </Typography>
-                </Link>
-              )}
-            </CardContent>
-          </Card>
-        ))}
+    <Card>
+      <CardContent>
+        <Typography variant="h6" gutterBottom>
+          {title}
+        </Typography>
+        <Typography variant="caption" display="block" gutterBottom>
+          {newsSince}
+        </Typography>
+        <Typography variant="body1" paragraph>
+          {description}
+        </Typography>
+        {source && (
+          <Link
+            href={source}
+            target="_blank"
+            style={{ textDecoration: "none" }}
+          >
+            <Typography
+              variant="caption"
+              color="primary"
+              sx={{
+                cursor: "pointer",
+                "&:hover": {
+                  textDecoration: "underline",
+                },
+              }}
+            >
+              View Source
+            </Typography>
+          </Link>
+        )}
+      </CardContent>
+    </Card>
+  );
+};
+
+const EmptyNewsCard = () => (
+  <Card
+    sx={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: 100,
+    }}
+  >
+    <CardContent>
+      <Typography variant="body1">No news found!</Typography>
+    </CardContent>
+  </Card>
+);
+
+const News = () => {
+  const news = useSelector((state) => state.firestore.data.dashboardNews);
+
+  if (!news || Object.keys(news).length === 0) {
+    return <EmptyNewsCard />;
+  }
+
+  const sortedNews = Object.entries(news)
+    .map(([id, item]) => ({ id, ...item }))
+    .filter((item) => item.title)
+    .sort((a, b) => {
+      const aDate = convertFirebaseTimestampToDate(a.releaseAt);
+      const bDate = convertFirebaseTimestampToDate(b.releaseAt);
+      return bDate - aDate;
+    });
+
+  return (
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+      {sortedNews.map((item) => (
+        <NewsItem key={item.id} {...item} />
+      ))}
     </Box>
   );
 };

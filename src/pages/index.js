@@ -10,7 +10,7 @@ import TrendingStocks from "@/components/stocks/TrendingStocks";
 export default function StockDashboard() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
-  const searchDebounce = useDebounce(search, 500);
+  const searchDebounce = useDebounce(search, 100);
 
   const allStocks = useSelector((state) => state.settings.stocks);
   const allStocksArray = Object.values(allStocks);
