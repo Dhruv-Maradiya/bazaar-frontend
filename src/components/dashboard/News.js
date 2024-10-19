@@ -21,7 +21,15 @@ const NewsItem = ({ title, releaseAt, description, source }) => {
   return (
     <Card>
       <CardContent>
-        <Typography variant="h6" gutterBottom>
+        <Typography
+          variant="h6"
+          gutterBottom
+          sx={{
+            userSelect: "none",
+            WebkitUserSelect: "none",
+            msUserSelect: "none",
+          }}
+        >
           {title}
         </Typography>
         <Typography variant="caption" display="block" gutterBottom>
