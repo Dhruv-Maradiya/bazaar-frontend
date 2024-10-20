@@ -67,7 +67,7 @@ export default function LeaderBoard() {
     };
 
     fetchLeaderBoardData();
-    const interval = setInterval(fetchLeaderBoardData, 5000);
+    const interval = setInterval(fetchLeaderBoardData, 60000);
 
     return () => clearInterval(interval);
   }, []);
@@ -193,7 +193,7 @@ export default function LeaderBoard() {
         textAlign="center"
         sx={{ mt: 2, display: "block" }}
       >
-        Note: Data updates every 5 seconds
+        Note: Data updates every minute
       </Typography>
     </Container>
   );
