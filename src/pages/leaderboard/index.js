@@ -59,7 +59,6 @@ export default function LeaderBoard() {
     const fetchLeaderBoardData = async () => {
       const leaderBoard = await firestore
         .collection("users")
-        .where("disabled", "==", false)
         .where("eligibleForLeaderBoard", "==", true)
         .orderBy("total", "desc")
         .limit(20)
