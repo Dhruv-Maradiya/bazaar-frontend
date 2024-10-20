@@ -61,7 +61,6 @@ export default function LeaderBoard() {
         .collection("users")
         .where("eligibleForLeaderBoard", "==", true)
         .orderBy("total", "desc")
-        .limit(20)
         .get();
       const data = leaderBoard.docs.map((doc) => doc.data());
       setLeaderBoardData(data);
